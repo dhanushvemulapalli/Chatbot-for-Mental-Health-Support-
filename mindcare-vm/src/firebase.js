@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBQUskY3pvYtFql3t1mBDxlWS0B_78f4iI",
+    apiKey: "API KEY",
     authDomain: "mindcare-vm.firebaseapp.com",
     projectId: "mindcare-vm",
     storageBucket: "mindcare-vm.firebasestorage.app",
