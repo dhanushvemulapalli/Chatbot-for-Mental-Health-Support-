@@ -47,7 +47,7 @@ const Hero = () => {
   return (
     <Box
       as="section"
-      id="hero"
+      id="home"
       position="relative"
       py={{ base: "20", md: "32" }}
       px="6"
