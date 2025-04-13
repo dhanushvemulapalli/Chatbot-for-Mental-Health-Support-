@@ -17,9 +17,11 @@ import {
   Stack,
   For,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   // const isMobile = useBreakpointValue({ base: true, lg: false })
+  const navigate = useNavigate();
   const items = [
     {
       name: "Happy",
@@ -154,6 +156,13 @@ const Hero = () => {
                 }}
                 transition="all 0.3s"
                 shadow="lg"
+                onClick={() => navigate("/Companion")}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
               >
                 Talk to MindCare
               </Button>
@@ -167,8 +176,14 @@ const Hero = () => {
                 px="8"
                 borderRadius="full"
                 _hover={{ bg: "gray.100", shadow: "lg" }}
-                transition="colors 0.3s"
+                transition="all 0.3s"
                 shadow="md"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
               >
                 Learn More
               </Button>

@@ -11,7 +11,7 @@ import {
 import Head from "next/head";
 import { RxHamburgerMenu } from "react-icons/rx";
 const Navbar = () => {
-  const links = ["Home", "About", "How It Works", "Features"];
+  const links = ["Home", "About", "How It Works", "Features","Companion"];
 
   return (
     <Box
@@ -41,7 +41,7 @@ const Navbar = () => {
           {links.map((link, i) => (
             <Link
               key={i}
-              href={`#${link.toLowerCase().replace(/\s+/g, "")}`}
+              href={link==="Companion"?link:`#${link.toLowerCase().replace(/\s+/g, "")}`}
               color="gray.700"
               _hover={{ color: "teal.600" }}
               transition="color 0.3s"
