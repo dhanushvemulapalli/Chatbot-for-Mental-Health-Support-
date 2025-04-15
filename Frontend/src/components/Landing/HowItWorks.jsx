@@ -13,8 +13,10 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 export default function HowItWorks() {
+  const navigate = useNavigate();
   const faq = [
     {
       question: "Is MindCare a replacement for therapy?",
@@ -173,6 +175,7 @@ export default function HowItWorks() {
                 py={3}
                 px={8}
                 rounded="full"
+                onClick={() => navigate("/Companion")}
               >
                 Try It Now
               </Button>
