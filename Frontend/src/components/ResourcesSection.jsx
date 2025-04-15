@@ -227,7 +227,7 @@ const ResourcesSection = () => {
 const ResourceCard = ({
   bgGradient,
 //   imageSrc,
-//   imageAlt,
+  imageAlt,
   tag,
   tagColor,
   meta,
@@ -248,8 +248,8 @@ const ResourceCard = ({
     >
       <Box h="48" overflow="hidden">
         <Image
-          src="https://placehold.co/600x600?text=Friendly AI mental health chatbot illustration"
-          alt="Friendly AI mental health chatbot illustration"
+          src={`https://placehold.co/600x600?text=${imageAlt}`}
+          alt={imageAlt}
           w="full"
           h="auto"
           borderRadius="lg"
