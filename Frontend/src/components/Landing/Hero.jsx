@@ -45,7 +45,12 @@ const Hero = () => {
       textColor: "green.500",
     },
   ];
-  const PartnerItems = [{name: "Partner 1"}, {name: "Partner 2"}, {name: "Partner 3"}, {name: "Partner 4"}]
+  const PartnerItems = [
+    { name: "Partner 1" },
+    { name: "Partner 2" },
+    { name: "Partner 3" },
+    { name: "Partner 4" },
+  ];
   return (
     <Box
       as="section"
@@ -56,7 +61,7 @@ const Hero = () => {
       overflow="hidden"
       css={{
         backgroundImage:
-          "linear-gradient(to bottom right, var(--chakra-colors-blue-50), var(--chakra-colors-green-50))",
+          "linear-gradient(to bottom right, #eff6ff, #f0fdf4)",
       }}
     >
       {/* Decorative background elements */}
@@ -196,8 +201,8 @@ const Hero = () => {
               <AvatarGroup size="lg" stacking="last-on-top">
                 {items.map((item) => (
                   <Avatar.Root key={item.name} bg={item.bgColor}>
-                    <Avatar.Fallback name={item.name} >
-                      <Text fontSize="sm" color={item.textColor} >
+                    <Avatar.Fallback name={item.name}>
+                      <Text fontSize="sm" color={item.textColor}>
                         {item.emoji}
                       </Text>
                     </Avatar.Fallback>
@@ -274,24 +279,26 @@ const Hero = () => {
 
               {/* Pulsing circle */}
               <Box position="absolute" bottom="4" right="4" h="6" w="6">
-                <Box
-                  position="absolute"
-                  borderRadius="full"
-                  h="full"
-                  w="full"
-                  bg="teal.400"
-                  opacity="0.75"
-                  css={{
-                    animation: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
-                  }}
-                />
-                <Box
-                  position="relative"
-                  borderRadius="full"
-                  h="6"
-                  w="6"
-                  bg="teal.500"
-                />
+                <a href="/Companion">
+                  <Box
+                    position="absolute"
+                    borderRadius="full"
+                    h="full"
+                    w="full"
+                    bg="teal.400"
+                    opacity="0.75"
+                    css={{
+                      animation: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
+                    }}
+                  />
+                  <Box
+                    position="relative"
+                    borderRadius="full"
+                    h="6"
+                    w="6"
+                    bg="teal.500"
+                  />
+                </a>
               </Box>
             </Box>
           </Box>
