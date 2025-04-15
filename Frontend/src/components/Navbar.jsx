@@ -10,9 +10,10 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
-  const links = ["Home", "About", "How It Works", "Features","Companion"];
-
+  const links = ["Home", "About", "How It Works", "Features","Companion", "Resources"];
+  const navigate = useNavigate();
   return (
     <Box
       bg="white"
@@ -41,7 +42,7 @@ const Navbar = () => {
           {links.map((link, i) => (
             <Link
               key={i}
-              href={link==="Companion"?link:`#${link.toLowerCase().replace(/\s+/g, "")}`}
+              href={link.toLowerCase() === "Companion" || link.toLowerCase() === "resources" ? link : `#${link.toLowerCase().replace(/\s+/g, "")}`}
               color="gray.700"
               _hover={{ color: "teal.600" }}
               transition="color 0.3s"

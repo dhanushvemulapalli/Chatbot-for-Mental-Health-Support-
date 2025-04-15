@@ -168,7 +168,7 @@ const Hero = () => {
               </Button>
               <Button
                 as="a"
-                href="#how-it-works"
+                href="#howitworks"
                 bg="white"
                 color="teal.600"
                 fontWeight="semibold"
