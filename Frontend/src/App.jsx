@@ -6,6 +6,7 @@ import Signup from "./components/Authentication/Signup";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Landing from "./components/Landing/Landing";
 import ChatModeDialog from "./components/Landing/ChatModeDialog";
+import ResourcesSection from "./components/Landing/ResourcesSection";
 
 function App() {
   const { setTheme } = useTheme();
@@ -22,6 +23,7 @@ function App() {
           <Route path="/Companion" element={<ChatModeDialog />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/resources" element={<ResourcesSection />} />
         </Routes>
       </BrowserRouter>
     </>

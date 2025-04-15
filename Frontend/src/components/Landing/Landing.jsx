@@ -4,6 +4,7 @@ import About from "./About";
 import FeaturesSection from "./FeaturesSection";
 import HowItWorks from "./HowItWorks";
 import ChatModeDialog from "./ChatModeDialog";
+import ResourcesSection from "./ResourcesSection";
 
 const Landing = () => {
   return (
@@ -12,6 +13,7 @@ const Landing = () => {
       <About />
       <HowItWorks />
       <FeaturesSection />
+
     </>
   );
 };
