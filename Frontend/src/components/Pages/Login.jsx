@@ -28,10 +28,11 @@ import {
 import { MdMail } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import PrivacyPolicy from "../Landing/PrivacyPolicy";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [open, setOpen] = useState(false);
   return (
     <Box
       py={20}
@@ -39,6 +40,7 @@ export default function LoginForm() {
       css={{
         backgroundImage: "linear-gradient(to bottom right, #ebf8ff, #f0fdf4)",
       }}
+      h={"full"}
     >
       <Container maxW="md" centerContent>
         <VStack spacing={10} textAlign="center" my={6}>
@@ -187,9 +189,14 @@ export default function LoginForm() {
           </HStack>
           <Text fontSize="xs" color="gray.500">
             We take your privacy seriously. See our{" "}
-            <Link textDecoration="underline" _hover={{ color: "gray.700" }}>
+            <Link
+              textDecoration="underline"
+              _hover={{ color: "gray.700" }}
+              onClick={() => setOpen(true)}
+            >
               Privacy Policy
             </Link>
+            <PrivacyPolicy open={open} setOpen={setOpen} />
           </Text>
         </VStack>
       </Container>
