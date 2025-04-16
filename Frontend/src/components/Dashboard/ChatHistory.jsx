@@ -80,7 +80,7 @@ export default function ChatHistory() {
     },
   ];
   return (
-    <Box px={{ base: 4, lg: 6 }} py={36} maxW="5xl" mx="auto">
+    <Box px={{ base: 4, lg: 6 }} py={26} maxW="5xl" mx="auto">
       {/* Header */}
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -121,7 +121,7 @@ export default function ChatHistory() {
       </Flex>
 
       {/* Threads */}
-      <Accordion.Root collapsible defaultValue="anxiety">
+      <Accordion.Root collapsible defaultValue={["anxiety"]}>
         {threads.map((thread) => (
           <Accordion.Item key={thread.value} value={thread.value}>
             <Accordion.ItemTrigger>
