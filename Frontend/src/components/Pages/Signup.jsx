@@ -30,10 +30,13 @@ import {
 import { useState } from "react";
 import { signInWithGoogle } from "../Authentication/firebase";
 import { FcGoogle } from "react-icons/fc";
+import PrivacyPolicy from "../Landing/PrivacyPolicy";
+import TermsOfServices from "../Landing/TermsOfServices";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [TOSopen, setTOSOpen] = useState(false);
   return (
     <Box
       py={20}
@@ -142,8 +145,16 @@ export default function Signup() {
                     <Checkbox.Control />
                     <Checkbox.Label fontWeight={"normal"}>
                       <Text ml={2} fontSize="sm">
-                        I agree to the <Link href="#">Terms of Service</Link>{" "}
-                        and <Link href="#">Privacy Policy</Link>
+                        I agree to the{" "}
+                        <Link onClick={() => setTOSOpen(true)}>
+                          Terms of Service
+                        </Link>
+                        <TermsOfServices open={TOSopen} setOpen={setTOSOpen} />{" "}
+                        and{" "}
+                        <Link onClick={() => setOpen(true)}>
+                          Privacy Policy
+                        </Link>
+                        <PrivacyPolicy open={open} setOpen={setOpen} />
                       </Text>
                     </Checkbox.Label>
                   </Checkbox.Root>
@@ -193,9 +204,14 @@ export default function Signup() {
           </Flex>
           <Text fontSize="xs" color="gray.500">
             We take your privacy seriously. See our{" "}
-            <Link href="#" textDecoration="underline">
+            <Link
+              textDecoration="underline"
+              _hover={{ color: "gray.700" }}
+              onClick={() => setOpen(true)}
+            >
               Privacy Policy
             </Link>
+            <PrivacyPolicy open={open} setOpen={setOpen} />
           </Text>
         </Box>
       </Container>
