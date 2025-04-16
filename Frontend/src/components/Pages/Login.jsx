@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useState } from "react";
-import { signInWithGoogle } from "./firebase";
+import { signInWithGoogle } from "../Authentication/firebase";
 
 import {
   IoEyeOutline,

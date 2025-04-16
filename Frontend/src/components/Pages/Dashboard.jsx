@@ -20,20 +20,21 @@ import {
   BsBookmarkStar,
   BsBarChart,
 } from "react-icons/bs";
-import Sidebar from "./Sidebar";
 import { useEffect, useState } from "react";
+import { decryptData } from "../Authentication/cryptoUtils";
 
 export default function Dashboard() {
   const [quote, setQuote] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/quote")
+    fetch("http://127.0.0.1:8000/api/quote/")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data[0].q); // Quote text
-        console.log(data[0].a); // Author
-        setQuote(data[0]);
+        console.log(data["encrypted_quote"]); // Quote text
+        const decryptedData = decryptData(data["encrypted_quote"]);
+        console.log(decryptedData); // Decrypted quote text
+        setQuote(decryptedData[0]);
         setLoading(false);
       });
   }, []);
@@ -48,7 +49,6 @@ export default function Dashboard() {
   return (
     <>
       <Flex>
-        <Sidebar />
         <Box
           as="section"
           id="dashboard"
@@ -105,12 +105,7 @@ export default function Dashboard() {
                   </Button>
                 ))}
               </Flex>
-              <Box
-                position="relative"
-                w="full"
-                rounded="xl"
-                overflow="hidden"
-              >
+              <Box position="relative" w="full" rounded="xl" overflow="hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8bWFpbiUyMHZpZXclMjBmZWF0dXJlZCUyMGltYWdlJTIwcHJvZmVzc2lvbmFsJTIwaGlnaCUyMHF1YWxpdHklMjBmZWF0dXJlZHxlbnwwfDB8fHwxNzQzMTU5NDUyfDA&ixlib=rb-4.0.3&q=80&w=1080?q=80"
                   fallbackSrc="https://placehold.co/600x400?text=Find+Your+Balance"

@@ -28,7 +28,7 @@ import {
   FaShieldAlt,
 } from "react-icons/fa";
 import { useState } from "react";
-import { signInWithGoogle } from "./firebase";
+import { signInWithGoogle } from "../Authentication/firebase";
 import { FcGoogle } from "react-icons/fc";
 
 export default function Signup() {

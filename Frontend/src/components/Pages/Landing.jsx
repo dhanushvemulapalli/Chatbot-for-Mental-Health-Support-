@@ -1,8 +1,8 @@
 import React from "react";
-import Hero from "./Hero";
-import About from "./About";
-import FeaturesSection from "./FeaturesSection";
-import HowItWorks from "./HowItWorks";
+import Hero from "../Landing/Hero";
+import About from "../Landing/About";
+import FeaturesSection from "../Landing/FeaturesSection";
+import HowItWorks from "../Landing/HowItWorks";
 import ChatModeDialog from "../ChatModeDialog";
 import ResourcesSection from "../ResourcesSection";
 

@@ -1,1 +1,3 @@
 venv/
+mindcare_backend/__pycache__/
+mindcare_backend/.env
