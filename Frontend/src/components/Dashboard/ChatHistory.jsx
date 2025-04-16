@@ -11,6 +11,8 @@ import {
   // Collapse,
   Button,
   Badge,
+  Accordion,
+  Span,
 } from "@chakra-ui/react";
 import {
   AiOutlineSearch,
@@ -19,14 +21,11 @@ import {
   AiOutlineRight,
   AiOutlineMessage,
 } from "react-icons/ai";
-import { useState } from "react";
 
 export default function ChatHistory() {
-  const [openThread, setOpenThread] = useState("anxiety");
-
   const threads = [
     {
-      id: "anxiety",
+      value: "anxiety",
       title: "Anxiety Management Techniques",
       date: "Started May 15, 2023",
       open: true,
@@ -55,20 +54,31 @@ export default function ChatHistory() {
       ],
     },
     {
-      id: "sleep",
+      value: "sleep",
       title: "Sleep Improvement Strategies",
       date: "Started May 10, 2023",
       unread: true,
       open: false,
     },
     {
-      id: "stress",
+      value: "stress",
       title: "Stress Management Plan",
       date: "Started April 28, 2023",
       open: false,
+      messages: [
+        {
+          sender: "JS",
+          time: "2:15 PM",
+          text: "I've been feeling overwhelmed with my workload. Any suggestions?",
+        },
+        {
+          sender: "bot",
+          time: "2:17 PM",
+          text: "It's important to take breaks and prioritize tasks. Would you like a personalized stress management plan?",
+        },
+      ],
     },
   ];
-
   return (
     <Box px={{ base: 4, lg: 6 }} py={36} maxW="5xl" mx="auto">
       {/* Header */}
@@ -96,7 +106,7 @@ export default function ChatHistory() {
             pl="2.5rem"
             w={{ base: "full", md: "16rem" }}
             borderColor="#C9E4CA"
-            focusBorderColor="#A7C5A6"
+            focusbordercolor="#A7C5A6"
             size="sm"
           />
           <Icon
@@ -111,98 +121,105 @@ export default function ChatHistory() {
       </Flex>
 
       {/* Threads */}
-      <VStack spacing={6} align="stretch">
+      <Accordion.Root collapsible defaultValue="anxiety">
         {threads.map((thread) => (
-          <Box
-            key={thread.id}
-            rounded="lg"
-            boxShadow="md"
-            overflow="hidden"
-            bg="white"
-          >
-            <Flex
-              p={4}
-              justify="space-between"
-              align="center"
-              css={{
-                backgroundImage: "linear-gradient(to bottom right, #ebf8ff, #f0fff4)",
-              }}
-              cursor="pointer"
-              onClick={() =>
-                setOpenThread(thread.id === openThread ? null : thread.id)
-              }
-            >
-              <HStack spacing={3}>
-                <Text fontWeight="medium" color="#2C3E50">
-                  {thread.title}
-                </Text>
-                <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
-                  {thread.date}
-                </Text>
-                {thread.unread && (
-                  <Badge
-                    variant="solid"
-                    colorScheme="red"
-                    borderRadius="full"
-                    px={2}
-                  >
-                    New
-                  </Badge>
-                )}
-              </HStack>
-              <Icon
-                as={AiOutlineDown}
-                transform={
-                  openThread === thread.id ? "rotate(180deg)" : "rotate(0)"
-                }
-                transition="transform 0.2s"
-                color="#2C3E50"
-              />
-            </Flex>
-
-            {/* <Collapse in={openThread === thread.id}>
-                <Box p={4}>
-                  {thread.messages ? (
-                    <VStack align="stretch" spacing={4}>
-                      {thread.messages.map((msg, idx) => (
-                        <HStack align="start" key={idx}>
-                          {msg.sender === "bot" ? (
-                            <Avatar src="https://avatar.iran.liara.run/public" name="Bot" size="sm" />
-                          ) : (
-                            <Avatar bg="#FFD8D8" color="#2C3E50" name="JS" size="sm" />
-                          )}
-                          <Box
-                            bg={msg.sender === "bot" ? "#E6F4F1" : "gray.100"}
-                            p={3}
-                            rounded="lg"
-                            maxW="80%"
-                            color="#2C3E50"
-                          >
-                            <Text fontSize="sm">{msg.text}</Text>
-                            {msg.list && (
-                              <Box as="ul" pl={4} pt={2} color="#2C3E50" fontSize="sm" listStyleType="disc">
-                                {msg.list.map((item, i) => (
-                                  <li key={i}>{item}</li>
-                                ))}
-                              </Box>
-                            )}
-                            <Text fontSize="xs" color="gray.500" mt={1}>
-                              {msg.time}
-                            </Text>
-                          </Box>
-                        </HStack>
-                      ))}
-                    </VStack>
-                  ) : (
-                    <Text fontSize="sm" color="gray.500" fontStyle="italic" textAlign="center">
-                      Click to expand conversation
-                    </Text>
+          <Accordion.Item key={thread.value} value={thread.value}>
+            <Accordion.ItemTrigger>
+              <Span flex="1">
+                {" "}
+                <HStack spacing={3}>
+                  <Text fontWeight="medium" color="#2C3E50">
+                    {thread.title}
+                  </Text>
+                  <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
+                    {thread.date}
+                  </Text>
+                  {thread.unread && (
+                    <Badge
+                      variant="solid"
+                      colorScheme="red"
+                      borderRadius="full"
+                      px={2}
+                    >
+                      New
+                    </Badge>
                   )}
-                </Box>
-              </Collapse> */}
-          </Box>
+                </HStack>
+              </Span>
+              <Accordion.ItemIndicator />
+            </Accordion.ItemTrigger>
+
+            <Accordion.ItemContent>
+              <Accordion.ItemBody p={4} bg="gray.50">
+                {console.log(thread.messages)}
+                {thread.messages ? (
+                  <VStack align="stretch" spacing={4}>
+                    {thread.messages.map((msg, idx) => (
+                      <HStack align="start" key={idx}>
+                        {msg.sender === "bot" ? (
+                          <Avatar.Root>
+                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Image
+                              src="https://avatar.iran.liara.run/public"
+                              name="Bot"
+                              size="sm"
+                            />
+                          </Avatar.Root>
+                        ) : (
+                          <Avatar.Root>
+                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Image
+                              bg="#FFD8D8"
+                              color="#2C3E50"
+                              name="JS"
+                              size="sm"
+                            />
+                          </Avatar.Root>
+                        )}
+                        <Box
+                          bg={msg.sender === "bot" ? "#E6F4F1" : "gray.100"}
+                          p={3}
+                          rounded="lg"
+                          maxW="80%"
+                          color="#2C3E50"
+                        >
+                          <Text fontSize="sm">{msg.text}</Text>
+                          {msg.list && (
+                            <Box
+                              as="ul"
+                              pl={4}
+                              pt={2}
+                              color="#2C3E50"
+                              fontSize="sm"
+                              listStyleType="disc"
+                            >
+                              {msg.list.map((item, i) => (
+                                <li key={i}>{item}</li>
+                              ))}
+                            </Box>
+                          )}
+                          <Text fontSize="xs" color="gray.500" mt={1}>
+                            {msg.time}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    ))}
+                  </VStack>
+                ) : (
+                  <Text
+                    fontSize="sm"
+                    color="gray.500"
+                    fontStyle="italic"
+                    textAlign="center"
+                  >
+                    Click to expand conversation
+                  </Text>
+                )}
+              </Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
         ))}
-      </VStack>
+      </Accordion.Root>
 
       {/* Pagination */}
       <Flex justify="center" mt={8} gap={2}>

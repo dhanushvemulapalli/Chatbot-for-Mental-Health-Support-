@@ -1,0 +1,112 @@
+      <Accordion.Root collapsible defaultValue="anxiety">
+        {threads.map((thread) => (
+          <Accordion.Item key={thread.value} value={thread.value}>
+            <Accordion.ItemTrigger asChild>
+              {/* <Flex
+                cursor="pointer"
+                justify="space-between"
+                align="center"
+                // background="linear-gradient(to bottom right, #ebf8ff, #f0fff4)"
+                p={4}
+                w="full"
+              >
+                <HStack spacing={3}>
+                  <Text fontWeight="medium" color="#2C3E50">
+                    {thread.title}
+                  </Text>
+                  <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
+                    {thread.date}
+                  </Text>
+                  {thread.unread && (
+                    <Badge
+                      variant="solid"
+                      colorScheme="red"
+                      borderRadius="full"
+                      px={2}
+                    >
+                      New
+                    </Badge>
+                  )}
+                </HStack>
+                <Accordion.ItemIndicator>
+                  <Icon as={AiOutlineDown} color="#2C3E50" />
+                </Accordion.ItemIndicator>
+              </Flex> */}
+              <>
+                <Span flex="1">Hello</Span>
+                <Accordion.ItemIndicator />
+              </>
+            </Accordion.ItemTrigger>
+
+            <Accordion.ItemContent>
+              <Accordion.ItemBody p={4} bg="gray.50">
+                {console.log(thread.messages)}
+                {/* {thread.messages ? (
+                  <VStack align="stretch" spacing={4}>
+                    {thread.messages.map((msg, idx) => (
+                      <HStack align="start" key={idx}>
+                        {msg.sender === "bot" ? (
+                          <Avatar.Root>
+                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Image
+                              src="https://avatar.iran.liara.run/public"
+                              name="Bot"
+                              size="sm"
+                            />
+                          </Avatar.Root>
+                        ) : (
+                          <Avatar.Root>
+                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Image
+                              bg="#FFD8D8"
+                              color="#2C3E50"
+                              name="JS"
+                              size="sm"
+                            />
+                          </Avatar.Root>
+                        )}
+                        <Box
+                          bg={msg.sender === "bot" ? "#E6F4F1" : "gray.100"}
+                          p={3}
+                          rounded="lg"
+                          maxW="80%"
+                          color="#2C3E50"
+                        >
+                          <Text fontSize="sm">{msg.text}</Text>
+                          {msg.list && (
+                            <Box
+                              as="ul"
+                              pl={4}
+                              pt={2}
+                              color="#2C3E50"
+                              fontSize="sm"
+                              listStyleType="disc"
+                            >
+                              {msg.list.map((item, i) => (
+                                <li key={i}>{item}</li>
+                              ))}
+                            </Box>
+                          )}
+                          <Text fontSize="xs" color="gray.500" mt={1}>
+                            {msg.time}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    ))}
+                  </VStack>
+                ) : (
+                  <Text
+                    fontSize="sm"
+                    color="gray.500"
+                    fontStyle="italic"
+                    textAlign="center"
+                  >
+                    Click to expand conversation
+                  </Text>
+                )} */}
+                HI
+              </Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
+        ))}
+      </Accordion.Root>
