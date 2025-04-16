@@ -93,6 +93,7 @@ export default function LoginForm() {
                         fontSize="sm"
                         color="teal.600"
                         _hover={{ color: "teal.800" }}
+                        href="/forgot-password"
                       >
                         Forgot Password?
                       </Link>

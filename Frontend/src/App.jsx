@@ -12,6 +12,7 @@ import ChatHistory from "./components/Dashboard/ChatHistory";
 import PublicLayout from "./components/layouts/PublicLayout";
 import PrivateLayout from "./components/layouts/PrivateLayout";
 import ForgotPassword from "./components/Pages/ForgotPassword";
+import Chat from "./components/Dashboard/Chat";
 
 function App() {
   const { setTheme } = useTheme();
@@ -22,7 +23,7 @@ function App() {
 
   const isLoggedIn = () => {
     // return localStorage.getItem('token') !== null;
-    return false; // Placeholder for actual authentication check
+    return true; // Placeholder for actual authentication check
   };
   return (
     <>
@@ -107,6 +108,14 @@ function App() {
                 element={
                   <PrivateLayout>
                     <ChatHistory />
+                  </PrivateLayout>
+                }
+              />
+              <Route
+                path="/Chats"
+                element={
+                  <PrivateLayout>
+                    <Chat />
                   </PrivateLayout>
                 }
               />
