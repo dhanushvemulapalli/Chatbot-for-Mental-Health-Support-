@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import mongoengine
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "api",
     "corsheaders",
+    "django_redis",
 ]
 
 MIDDLEWARE = [
@@ -62,7 +65,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+
 ROOT_URLCONF = "mindcare_backend.urls"
+
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 24 hours
 
 TEMPLATES = [
     {
@@ -89,6 +99,42 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'mindcare_db',
+#         'ENFORCE_SCHEMA': False,
+#         'CLIENT': {
+#             'host': os.getenv('MONGODB_URI'),
+#             'port': 27017,
+#             'username': os.getenv('MONGODB_USERNAME'),
+#             'password': os.getenv('MONGODB_PASSWORD'),
+#             'authSource': 'admin',
+#             'authMechanism': 'SCRAM-SHA-1',
+#         }
+#     }
+# }
+
+
+mongoengine.connect(
+    db="mindcare_db",  # this can be left out if it's in the URI
+    host=os.getenv('MONGODB_URI')
+)
+
+REDIS_URL = os.getenv('REDIS_URL')
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
 

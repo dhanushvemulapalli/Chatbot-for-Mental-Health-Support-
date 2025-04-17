@@ -21,7 +21,7 @@ import {
   BsBarChart,
 } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import { decryptData } from "../Authentication/cryptoUtils";
+import { decryptData, encryptData } from "../Authentication/cryptoUtils";
 
 export default function Dashboard() {
   const [quote, setQuote] = useState([]);
@@ -133,6 +133,7 @@ export default function Dashboard() {
                 >
                   <Text fontSize="xl" fontWeight="bold">
                     “{quote.q}”
+                  
                   </Text>
                   <Text fontSize="md" opacity={0.8}>
                     — {quote.a}

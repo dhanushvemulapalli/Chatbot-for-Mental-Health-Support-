@@ -1,0 +1,409 @@
+[
+  {
+    "id": "dog_therapy_video",
+    "title": "Cute Dogs for Anxiety Relief",
+    "tags": ["Animal-Assisted Therapy", "Stress Relief", "Mood Boost"],
+    "description": "Watching cute and playful dog videos has been shown to reduce cortisol levels and ease feelings of anxiety. These videos offer a momentary distraction from stress, help induce positive emotions, and provide a calming effect. Whether you're feeling overwhelmed or just need a quick mental break, a short session with a dog compilation video can be surprisingly therapeutic.",
+    "link": "https://www.youtube.com/results?search_query=cute+dogs+anxiety+reduction",
+    "accessible": true,
+    "type": "video"
+  },
+  {
+    "id": "breathing_exercises",
+    "title": "Guided Breathing Exercises",
+    "tags": ["Mindfulness", "Relaxation", "Self-Regulation"],
+    "description": "Breathing exercises are one of the simplest and most effective ways to manage acute stress and anxiety. Guided breathing helps activate the parasympathetic nervous system, lowering heart rate and calming the mind. This resource provides step-by-step guidance on deep breathing techniques that you can use anytime, whether during a panic attack or to unwind at the end of the day.",
+    "link": "https://www.healthline.com/health/breathing-exercises-for-anxiety",
+    "accessible": false,
+    "type": "article"
+  },
+  {
+    "id": "crisis_hotlines",
+    "title": "Immediate Crisis Helplines",
+    "tags": ["Crisis Support", "Emergency Help", "Mental Health Helplines"],
+    "description": "In moments of severe distress or when feeling overwhelmed, immediate help can be crucial. Crisis helplines are staffed by trained professionals who can offer a listening ear, safety planning, and referral to resources. This directory connects you to crisis services based on your location, ensuring you're never alone in a critical moment.",
+    "link": "https://findahelpline.com/",
+    "accessible": false,
+    "type": "article"
+  },
+  {
+    "id": "mindfulness_meditation",
+    "title": "Mindfulness Meditation",
+    "tags": ["Meditation", "Self-Awareness", "Mental Clarity"],
+    "description": "Mindfulness meditation encourages non-judgmental awareness of the present moment, helping individuals distance themselves from overwhelming thoughts. Regular practice has been linked to reduced symptoms of anxiety, depression, and emotional reactivity. This resource includes beginner-friendly guided sessions and articles to help establish a daily habit.",
+    "link": "https://www.mindful.org/meditation/",
+    "accessible": false,
+    "type": "article"
+  },
+  {
+    "id": "guided_relaxation_video",
+    "title": "On-Spot Guided Relaxation",
+    "tags": ["Video Resource", "Stress Relief", "Immediate Support"],
+    "description": "Sometimes what you need is a few minutes to reset. This guided relaxation video walks you through calming techniques using visualization, breathwork, and grounding exercises. Ideal for moments when you’re feeling tense or anxious, it provides instant emotional relief and helps improve mental clarity.",
+    "link": "https://www.youtube.com/results?search_query=guided+relaxation+session",
+    "accessible": true,
+    "type": "video"
+  },
+  {
+    "id": "cognitive_behavioral_techniques",
+    "title": "Cognitive Behavioral Techniques (CBT)",
+    "tags": ["CBT", "Coping Skills", "Therapeutic Tools"],
+    "description": "CBT techniques help users identify and reframe negative thought patterns that contribute to anxiety, depression, or low self-esteem. This resource offers exercises such as journaling prompts, thought records, and action plans. It empowers individuals to challenge cognitive distortions and build resilience through practical, structured approaches.",
+    "link": "https://www.nimh.nih.gov/health/topics/psychotherapies/index.shtml",
+    "accessible": false,
+    "type": "article"
+  },
+  {
+    "id": "music_therapy_video",
+    "title": "Music Therapy for Relaxation",
+    "tags": ["Soothing Sounds", "Mood Lifting", "Calm Focus"],
+    "description": "Listening to music that promotes relaxation can lower stress hormones and stabilize mood. This playlist features carefully curated tracks known for their calming effects, such as slow tempo instrumental and ambient sounds. It’s a great tool to create a peaceful atmosphere and unwind during overwhelming moments.",
+    "link": "https://www.youtube.com/results?search_query=music+therapy+relaxation",
+    "accessible": true,
+    "type": "video"
+  },
+  {
+    "id": "self_care_podcast",
+    "title": "Self-Care & Mental Wellness Podcast",
+    "tags": ["Audio Resource", "Self-Help", "Inspiration"],
+    "description": "This podcast covers topics like overcoming burnout, building daily mental health routines, and stories of personal growth. Hearing from experts and individuals with lived experience can offer both encouragement and practical strategies for emotional well-being. You can tune in anytime to feel heard and uplifted.",
+    "link": "https://podcasts.apple.com/us/genre/podcasts-health/id1512",
+    "accessible": true,
+    "type": "video"
+  },
+  {
+    "title": "Cute Dogs for Anxiety Relief",
+    "tags": ["relaxation", "dog videos", "stress relief"],
+    "description": "Watching cute dog videos is a quick and accessible way to reduce anxiety. These videos are known to trigger positive emotions and provide momentary distraction from overwhelming thoughts, making them ideal for users needing immediate relief. For individuals feeling isolated or distressed, visual interaction with friendly animals—even through a screen—can create a sense of connection and warmth.",
+    "link": "https://www.youtube.com/results?search_query=cute+dogs+anxiety+reduction",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Guided Breathing Exercises",
+    "tags": ["breathing", "calm", "mindfulness"],
+    "description": "Deep breathing techniques can significantly lower stress levels by activating the body's relaxation response. Guided breathing exercises teach users how to slow their breath, which in turn slows the heart rate and reduces anxiety. These resources are excellent for users experiencing panic attacks, difficulty concentrating, or general overwhelm, offering a structured and calming intervention within minutes.",
+    "link": "https://www.healthline.com/health/breathing-exercises-for-anxiety",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Mindfulness Meditation for Emotional Balance",
+    "tags": ["mindfulness", "emotional regulation", "meditation"],
+    "description": "Mindfulness meditation encourages present-moment awareness and acceptance, which helps users manage distressing thoughts and emotions. Regular practice has been shown to reduce symptoms of depression and anxiety, while also increasing resilience and emotional control. This guided resource introduces users to techniques that can be applied during moments of high stress, or as a daily routine to improve long-term mental well-being.",
+    "link": "https://www.mindful.org/meditation/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Yoga for Mental Clarity and Relaxation",
+    "tags": ["yoga", "stress relief", "physical activity"],
+    "description": "Yoga combines movement, breathing, and mindfulness, offering a holistic approach to reducing stress and improving mental clarity. This resource provides accessible routines for all skill levels and focuses on poses known to alleviate anxiety. Practicing yoga regularly can boost mood, improve sleep, and create a grounded sense of well-being—particularly helpful for users who benefit from physical outlets to release tension.",
+    "link": "https://www.yogajournal.com/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Art Therapy for Emotional Expression",
+    "tags": ["art therapy", "self-expression", "creativity"],
+    "description": "Art therapy is a form of expressive therapy that uses creative activities like painting, drawing, or sculpting to help individuals process emotions. This resource offers practical exercises and techniques that allow users to express their feelings visually, providing a therapeutic outlet for anxiety, depression, or trauma. Art therapy helps users articulate emotions that might be difficult to put into words, fostering emotional release and healing.",
+    "link": "https://arttherapy.org/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Cognitive Behavioral Therapy (CBT) Techniques",
+    "tags": ["CBT", "mental health", "psychotherapy"],
+    "description": "Cognitive Behavioral Therapy (CBT) is a well-established therapeutic approach that helps users identify and challenge negative thought patterns. This resource offers an introduction to CBT techniques, such as cognitive restructuring and behavioral activation, that can be applied in everyday life to reduce anxiety and improve mental resilience. It’s particularly useful for users struggling with unhelpful thought patterns and behaviors.",
+    "link": "https://www.psychologytoday.com/us/basics/cognitive-behavioral-therapy",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Online Support Groups for Mental Health",
+    "tags": ["support groups", "community", "mental health support"],
+    "description": "Support groups provide a space for individuals to share their experiences and gain comfort from others facing similar challenges. This resource connects users to online forums and virtual support communities, fostering a sense of belonging and shared understanding. Whether it's dealing with anxiety, depression, or grief, these groups offer emotional support and practical advice.",
+    "link": "https://www.supportgroups.com/",
+    "resourceAvailable": true,
+    "type": "community"
+  },
+
+  {
+    "title": "Sleep Hygiene Tips for Better Rest",
+    "tags": ["sleep", "mental health", "relaxation"],
+    "description": "Proper sleep hygiene is essential for maintaining mental and physical health. This resource provides users with practical tips for improving sleep quality, including establishing a regular sleep schedule, creating a calm bedtime routine, and managing sleep environment. Adequate sleep is a cornerstone of emotional regulation and can help users manage stress and anxiety more effectively.",
+    "link": "https://www.sleepfoundation.org/sleep-hygiene",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Dance Therapy for Stress Relief",
+    "tags": ["dance therapy", "physical activity", "relaxation"],
+    "description": "Dance therapy is a form of creative expression that uses movement to release tension and improve emotional well-being. This resource provides users with guided dance routines designed to reduce anxiety and stress. By engaging in movement, users can release pent-up emotions and boost their mood through physical expression.",
+    "link": "https://www.youtube.com/results?search_query=dance+therapy+for+mental+health",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+
+  {
+    "title": "Tai Chi for Stress Relief",
+    "tags": ["Tai Chi", "stress relief", "physical activity"],
+    "description": "Tai Chi is a gentle martial art that combines slow, deliberate movements with breathing techniques. This resource provides a series of Tai Chi exercises that can help reduce stress, improve balance, and promote relaxation. Tai Chi is ideal for users looking for a low-impact physical activity that calms the mind and body.",
+    "link": "https://www.youtube.com/results?search_query=tai+chi+for+stress+relief",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+
+  {
+    "title": "Gratitude Journaling for Positive Thinking",
+    "tags": ["journaling", "self-reflection", "positivity"],
+    "description": "Gratitude journaling is a practice that encourages users to reflect on and write down things they are grateful for. This simple yet powerful habit can help shift focus away from stress and negativity towards positivity and resilience. This resource offers guidance on how to start and maintain a gratitude journal.",
+    "link": "https://positivepsychology.com/gratitude-journal/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Cute Dogs for Anxiety Relief",
+    "tags": ["relaxation", "dog videos", "stress relief"],
+    "description": "Watching cute dog videos is a quick and accessible way to reduce anxiety. These videos are known to trigger positive emotions and provide momentary distraction from overwhelming thoughts, making them ideal for users needing immediate relief. For individuals feeling isolated or distressed, visual interaction with friendly animals—even through a screen—can create a sense of connection and warmth.",
+    "link": "https://www.youtube.com/results?search_query=cute+dogs+anxiety+reduction",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Guided Breathing Exercises",
+    "tags": ["breathing", "calm", "mindfulness"],
+    "description": "Deep breathing techniques can significantly lower stress levels by activating the body's relaxation response. Guided breathing exercises teach users how to slow their breath, which in turn slows the heart rate and reduces anxiety. These resources are excellent for users experiencing panic attacks, difficulty concentrating, or general overwhelm, offering a structured and calming intervention within minutes.",
+    "link": "https://www.healthline.com/health/breathing-exercises-for-anxiety",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Yoga for Mental Clarity and Relaxation",
+    "tags": ["yoga", "stress relief", "physical activity"],
+    "description": "Yoga combines movement, breathing, and mindfulness, offering a holistic approach to reducing stress and improving mental clarity. This resource provides accessible routines for all skill levels and focuses on poses known to alleviate anxiety. Practicing yoga regularly can boost mood, improve sleep, and create a grounded sense of well-being—particularly helpful for users who benefit from physical outlets to release tension.",
+    "link": "https://www.yogajournal.com/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Art Therapy for Emotional Expression",
+    "tags": ["art therapy", "self-expression", "creativity"],
+    "description": "Art therapy is a form of expressive therapy that uses creative activities like painting, drawing, or sculpting to help individuals process emotions. This resource offers practical exercises and techniques that allow users to express their feelings visually, providing a therapeutic outlet for anxiety, depression, or trauma. Art therapy helps users articulate emotions that might be difficult to put into words, fostering emotional release and healing.",
+    "link": "https://arttherapy.org/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Cognitive Behavioral Therapy (CBT) Techniques",
+    "tags": ["CBT", "mental health", "psychotherapy"],
+    "description": "Cognitive Behavioral Therapy (CBT) is a well-established therapeutic approach that helps users identify and challenge negative thought patterns. This resource offers an introduction to CBT techniques, such as cognitive restructuring and behavioral activation, that can be applied in everyday life to reduce anxiety and improve mental resilience. It’s particularly useful for users struggling with unhelpful thought patterns and behaviors.",
+    "link": "https://www.psychologytoday.com/us/basics/cognitive-behavioral-therapy",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Sleep Hygiene Tips for Better Rest",
+    "tags": ["sleep", "mental health", "relaxation"],
+    "description": "Proper sleep hygiene is essential for maintaining mental and physical health. This resource provides users with practical tips for improving sleep quality, including establishing a regular sleep schedule, creating a calm bedtime routine, and managing sleep environment. Adequate sleep is a cornerstone of emotional regulation and can help users manage stress and anxiety more effectively.",
+    "link": "https://www.sleepfoundation.org/sleep-hygiene",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Dance Therapy for Stress Relief",
+    "tags": ["dance therapy", "physical activity", "relaxation"],
+    "description": "Dance therapy is a form of creative expression that uses movement to release tension and improve emotional well-being. This resource provides users with guided dance routines designed to reduce anxiety and stress. By engaging in movement, users can release pent-up emotions and boost their mood through physical expression.",
+    "link": "https://www.youtube.com/results?search_query=dance+therapy+for+mental+health",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+
+  {
+    "title": "Mental Health and Wellness Podcasts",
+    "tags": ["podcasts", "mental health", "wellness"],
+    "description": "Listening to mental health podcasts is a great way to gain insights and tips for managing stress, anxiety, and depression. This resource curates a list of podcasts that focus on personal stories, expert advice, and coping strategies for emotional wellness. Perfect for users who prefer learning on the go or while relaxing.",
+    "link": "https://www.apple.com/us/podcast/mental-health-wellness/",
+    "resourceAvailable": true,
+    "type": "podcast"
+  },
+  {
+    "title": "Gratitude Journaling for Positive Thinking",
+    "tags": ["journaling", "self-reflection", "positivity"],
+    "description": "Gratitude journaling is a practice that encourages users to reflect on and write down things they are grateful for. This simple yet powerful habit can help shift focus away from stress and negativity towards positivity and resilience. This resource offers guidance on how to start and maintain a gratitude journal.",
+    "link": "https://positivepsychology.com/gratitude-journal/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Therapy Cats for Stress Relief",
+    "tags": ["relaxation", "cat therapy", "stress relief"],
+    "description": "Interacting with therapy cats has been shown to reduce anxiety and elevate mood. This resource highlights how spending time with cats can help users manage stress, anxiety, and even depression. Cats provide a calming presence with their gentle purring, offering comfort to individuals experiencing emotional distress. This is especially helpful for users who enjoy quiet companionship or need emotional support.",
+    "link": "https://www.youtube.com/results?search_query=therapy+cats+stress+relief",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+
+  {
+    "title": "Goat Yoga for Stress Relief",
+    "tags": ["goat yoga", "physical activity", "stress relief"],
+    "description": "Goat yoga combines the benefits of yoga with the joy of interacting with playful goats. This resource introduces users to goat yoga classes that allow them to practice yoga while enjoying the company of these gentle animals. The playful nature of goats combined with the calming effect of yoga creates a therapeutic experience that is both fun and effective in reducing stress and anxiety.",
+    "link": "https://www.goatyoga.com/",
+    "resourceAvailable": true,
+    "type": "event"
+  },
+  {
+    "title": "Dolphin Therapy for Emotional Healing",
+    "tags": ["dolphin therapy", "emotional healing", "water therapy"],
+    "description": "Dolphin therapy is an alternative therapeutic approach that uses interactions with dolphins to improve mental health. This resource provides users with information on how dolphin-assisted therapy helps people with emotional and psychological issues, including autism, anxiety, and depression. The gentle and playful nature of dolphins helps foster emotional connection and healing.",
+    "link": "https://www.dolphintherapy.org/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Penguin Watching for Stress Reduction",
+    "tags": ["penguin watching", "nature", "stress relief"],
+    "description": "Watching penguins in their natural habitat can be a soothing experience that helps users relax and de-stress. This resource recommends virtual penguin watching through live streams or nature documentaries to help users alleviate anxiety. The peaceful and often humorous behavior of penguins can help distract from negative thoughts and induce a feeling of tranquility.",
+    "link": "https://www.zooniverse.org/projects",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Dog Therapy",
+    "tags": ["animal-assisted therapy", "anxiety relief", "comfort"],
+    "description": "Dog therapy involves interactions with trained therapy dogs to provide emotional support and reduce stress. This is especially helpful for individuals dealing with anxiety or emotional fatigue.",
+    "link": "https://www.petpartners.org/therapy-dogs",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "The Healing Power of Yoga",
+    "tags": ["yoga", "stress relief", "mind-body connection"],
+    "description": "Learn how yoga helps reduce stress, improve emotional regulation, and boost mental clarity through physical postures and breathing techniques.",
+    "link": "https://www.yogajournal.com/poses/yoga-for-anxiety/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Nature Sounds for Relaxation and Focus",
+    "tags": ["nature therapy", "relaxation", "natural soundscapes"],
+    "description": "Explore how listening to nature sounds like rain, birdsong, and ocean waves can reduce cortisol and promote calmness.",
+    "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5744722/",
+    "resourceAvailable": true,
+    "type": "research article"
+  },
+  {
+    "title": "Mindfulness Meditation Techniques",
+    "tags": ["mindfulness", "meditation", "inner peace"],
+    "description": "Step-by-step guide on how to practice mindfulness meditation for reducing anxiety and improving self-awareness.",
+    "link": "https://www.mindful.org/how-to-meditate/",
+    "resourceAvailable": true,
+    "type": "guide"
+  },
+  {
+    "title": "Art Therapy: Creativity as a Healing Tool",
+    "tags": ["art therapy", "creative expression", "healing"],
+    "description": "Art therapy uses painting, drawing, and sculpture to help individuals explore emotions, develop self-awareness, and manage behavior.",
+    "link": "https://arttherapy.org/about-art-therapy/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Forest Bathing: The Japanese Practice of Shinrin-Yoku",
+    "tags": ["nature therapy", "forest bathing", "mindfulness"],
+    "description": "Forest bathing involves immersing oneself in nature to relieve stress, lower blood pressure, and improve mood.",
+    "link": "https://time.com/5259602/japanese-forest-bathing/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+  {
+    "title": "Music Therapy for Emotional Regulation",
+    "tags": ["music therapy", "mental health", "emotional healing"],
+    "description": "Music therapy uses rhythm, melody, and harmony to improve mood, manage stress, and encourage self-expression.",
+    "link": "https://www.musictherapy.org/about/musictherapy/",
+    "resourceAvailable": true,
+    "type": "article"
+  },
+
+  {
+    "title": "Yoga for Mental Clarity",
+    "tags": ["yoga", "mental health", "mind-body practice"],
+    "description": "Yoga improves mental clarity and calmness through breathing techniques, physical postures, and meditation.",
+    "link": "https://www.yogajournal.com/poses/yoga-for-anxiety/",
+    "resourceAvailable": true,
+    "type": "guide"
+  },
+
+  {
+    "title": "Mindfulness-Based Stress Reduction (MBSR)",
+    "tags": ["mindfulness", "meditation", "stress reduction"],
+    "description": "A structured program using mindfulness meditation to reduce stress and anxiety, backed by clinical evidence.",
+    "link": "https://www.umassmed.edu/cfm/mindfulness-based-programs/mbsr-courses/",
+    "resourceAvailable": true,
+    "type": "program"
+  },
+
+  {
+    "title": "Meet Chewie: The Therapy Dog Supporting Students' Mental Health",
+    "tags": ["animal-assisted therapy", "emotional support", "stress relief"],
+    "description": "A New Jersey school district introduces a therapy dog named Chewie, who positively impacts students' mental health.",
+    "link": "https://www.youtube.com/watch?v=sOxHJTzvq4Q",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Yoga for Anxiety - 20 Minute Practice",
+    "tags": ["yoga", "stress management", "mind-body connection"],
+    "description": "A 20-minute yoga session designed to alleviate anxiety and promote relaxation.",
+    "link": "https://www.youtube.com/watch?v=bJJWArRfKa0",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Dance Movement Therapy with Kristi Graziano",
+    "tags": ["dance therapy", "emotional expression", "mental health"],
+    "description": "An introduction to dance/movement therapy, highlighting its benefits for emotional and psychological well-being.",
+    "link": "https://www.youtube.com/watch?v=IJ6wd3hntnE",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Birdsong Therapy | Relaxing Nature Sounds for Anxiety & Insomnia",
+    "tags": ["natural sounds", "birdsong", "relaxation"],
+    "description": "Soothing birdsong sounds to help reduce anxiety and improve sleep quality.",
+    "link": "https://www.youtube.com/watch?v=3H2sG6U9kcc",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "Ocean Breathing Meditation",
+    "tags": ["breathwork", "ocean sounds", "relaxation"],
+    "description": "Headspace introduces 'Ocean Breathing,' a meditation technique that uses the rhythm of ocean waves to promote calmness.",
+    "link": "https://www.headspace.com/content/meditation/relax-with-ocean-breathing/7511",
+    "resourceAvailable": true,
+    "type": "audio guide"
+  },
+  {
+    "title": "Daily Calm | 10 Minute Mindfulness Meditation | Be Present",
+    "tags": ["mindfulness", "meditation", "stress reduction"],
+    "description": "A beginner's guide to mindfulness meditation, providing techniques to enhance mental clarity and reduce stress.",
+    "link": "https://www.youtube.com/watch?v=ZToicYcHIOU",
+    "resourceAvailable": true,
+    "type": "video"
+  },
+  {
+    "title": "The Most Relaxing Waves Ever - Ocean Sounds to Sleep, Study and Relax",
+    "tags": ["ocean waves", "sound therapy", "calm"],
+    "description": "Continuous ocean wave sounds designed to help you relax, unwind, and achieve deep, restful sleep.",
+    "link": "https://www.youtube.com/watch?v=vPhg6sc1Mk4",
+    "resourceAvailable": true,
+    "type": "video"
+  }
+]
