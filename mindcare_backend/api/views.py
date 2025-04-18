@@ -4,6 +4,8 @@ from .utils.crypto_utils import decrypt_data, encrypt_data
 from .models import User, UserPreference, EmergencyContact, Resource, Message, ChatSession
 from mongoengine.queryset.visitor import Q
 from datetime import datetime
+import time
+from django.conf import settings
 import requests
 import os
 import json
@@ -86,25 +88,56 @@ def login_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            username = data.get('username')
-            input_password_hash = data.get('passwordhash')  # hashed from frontend
+            email = data.get('emailaddress')
+            input_password_hash = data.get('passwordhash')
 
-            if not username or not input_password_hash:
-                return JsonResponse({'message': 'Username and password are required'}, status=400)
+            if not email or not input_password_hash:
+                return JsonResponse({'message': 'Email and password are required'}, status=400)
 
-            # Find user
-            user = User.objects(username=username).first()
+            # Find user by email
+            user = User.objects(email_address=email).first()
             if not user:
                 return JsonResponse({'message': 'Invalid credentials'}, status=401)
 
             # Compare the hashes directly
             if input_password_hash == user.password:
-                # Set session
+                # Create session
+                if not request.session.session_key:
+                    request.session.create()
+                
+                # Set session data
                 request.session['user'] = {
                     'username': user.username,
                     'emailaddress': user.email_address
                 }
-                return JsonResponse({'message': 'Login successful', 'loggedIn': True})
+                request.session.save()
+                
+                # Create response
+                response = JsonResponse({'message': 'Login successful', 'loggedIn': True})
+                
+                
+                response.set_cookie(
+                    'sessionid',
+                    request.session.session_key,
+                    max_age=3600,
+                    httponly=False,  # Allow JS access for easy checking
+                    samesite='Lax'
+                )
+                
+                # Also set a test cookie to see if any cookies work
+                # Set a simple cookie
+                response.set_cookie(
+                    'test_cookie',
+                    'cookie_value_' + str(time.time()),  # Use timestamp to see changes
+                    max_age=3600,
+                    httponly=False,  # Allow JS access for easy checking
+                    samesite='Lax'
+                )
+                
+                print("Session key:", request.session.session_key)
+                print("Setting cookies:", response.cookies)
+                
+                return response
             else:
                 return JsonResponse({'message': 'Invalid credentials'}, status=401)
 
@@ -114,11 +147,74 @@ def login_view(request):
     return JsonResponse({'error': 'Only POST allowed'}, status=405)
 
 
+@csrf_exempt
+def get_user_data(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Only GET method allowed'}, status=405)
+
+    user_session = request.session.get('user')
+    if not user_session:
+        return JsonResponse({'error': 'User not logged in'}, status=401)
+
+    try:
+        # Fetch user using email from session
+        user = User.objects.get(email_address=user_session['emailaddress'])
+
+        user_data = {
+            'user_id': user.user_id,
+            'username': user.username,
+            'email_address': user.email_address,
+            'last_login_date': user.last_login_date,
+            'login_attempts': user.login_attempts,
+            'preferences': user.preferences.to_mongo().to_dict() if user.preferences else {},
+            'emergency_contacts': [ec.to_mongo().to_dict() for ec in user.emergency_contacts] if user.emergency_contacts else [],
+        }
+
+        return JsonResponse({'user': user_data})
+
+    except DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def test_cookie(request):
+    # Check if the test cookie exists
+    test_cookie = request.COOKIES.get('test_cookie')
+    
+    # Set a test cookie in the response
+    response = JsonResponse({
+        'message': 'Cookie test',
+        'existing_cookie': test_cookie
+    })
+    
+    # Set a simple cookie
+    response.set_cookie(
+        'test_cookie',
+        'cookie_value_' + str(time.time()),  # Use timestamp to see changes
+        max_age=3600,
+        httponly=False,  # Allow JS access for easy checking
+        samesite='Lax'
+    )
+    
+    print("Setting test cookie")
+    return response
+
+
+@csrf_exempt
 def check_session(request):
+    print("Cookies received:", request.COOKIES)
+    print("Session ID:", request.session.session_key)
+    print("Session contents:", dict(request.session))
+    
     user = request.session.get('user')
+    print("User in session:", user)
+    
     if user:
         return JsonResponse({'loggedIn': True, 'user': user})
-    return JsonResponse({'loggedIn': False}, status=401)
+    return JsonResponse({'loggedIn': False}, status=200)  # Return 200 even if not logged in
 
 
 @csrf_exempt
@@ -143,6 +239,7 @@ def anonymous_chat_view(request):
 
 
 
+@csrf_exempt
 def check_user_type(request):
     # Check if user is authenticated via Django's authentication system
     if request.user.is_authenticated:

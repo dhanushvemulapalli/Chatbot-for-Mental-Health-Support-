@@ -8,12 +8,12 @@ import {
   VStack,
   HStack,
   Avatar,
-  // Collapse,
   Button,
   Badge,
   Accordion,
   Span,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import {
   AiOutlineSearch,
   AiOutlineDown,
@@ -23,62 +23,46 @@ import {
 } from "react-icons/ai";
 
 export default function ChatHistory() {
-  const threads = [
-    {
-      value: "anxiety",
-      title: "Anxiety Management Techniques",
-      date: "Started May 15, 2023",
-      open: true,
-      messages: [
-        {
-          sender: "JS",
-          time: "10:32 AM",
-          text: "I've been feeling really anxious lately, especially at work. Do you have any techniques that might help?",
-        },
-        {
-          sender: "bot",
-          time: "10:34 AM",
-          text: "I'm sorry to hear you're feeling anxious. There are several techniques that might help you manage workplace anxiety:",
-          list: [
-            "Deep breathing exercises (4-7-8 method)",
-            "Short mindfulness breaks",
-            "Progressive muscle relaxation",
-            "Setting realistic daily goals",
-          ],
-        },
-        {
-          sender: "JS",
-          time: "10:36 AM",
-          text: "Yes, could you tell me more about the deep breathing technique?",
-        },
-      ],
-    },
-    {
-      value: "sleep",
-      title: "Sleep Improvement Strategies",
-      date: "Started May 10, 2023",
-      unread: true,
-      open: false,
-    },
-    {
-      value: "stress",
-      title: "Stress Management Plan",
-      date: "Started April 28, 2023",
-      open: false,
-      messages: [
-        {
-          sender: "JS",
-          time: "2:15 PM",
-          text: "I've been feeling overwhelmed with my workload. Any suggestions?",
-        },
-        {
-          sender: "bot",
-          time: "2:17 PM",
-          text: "It's important to take breaks and prioritize tasks. Would you like a personalized stress management plan?",
-        },
-      ],
-    },
-  ];
+  const [sessions, setSessions] = useState([]); // Initialize as an empty array
+  const [error, setError] = useState(null);
+
+  const isDateToday = (timestamp) => {
+    const date = new Date(timestamp);
+    const today = new Date();
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  };
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/get-user-chat-history/", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Failed to load sessions");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // Assuming the data object contains a 'sessions' property that is an array
+        if (data && Array.isArray(data.sessions)) {
+          setSessions(data.sessions); // Set sessions from the data.sessions array
+        } else {
+          setError("Invalid data format received");
+        }
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  }, []);
+
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <Box px={{ base: 4, lg: 6 }} py={26} maxW="5xl" mx="auto">
       {/* Header */}
@@ -121,20 +105,20 @@ export default function ChatHistory() {
       </Flex>
 
       {/* Threads */}
-      <Accordion.Root collapsible defaultValue={["anxiety"]}>
-        {threads.map((thread) => (
-          <Accordion.Item key={thread.value} value={thread.value}>
+      <Accordion.Root defaultValue={[new Date()]} multiple>
+        {sessions.map((session) => (
+          <Accordion.Item key={session.id} value={session.start_time}>
             <Accordion.ItemTrigger>
               <Span flex="1">
-                {" "}
-                <HStack spacing={3}>
-                  <Text fontWeight="medium" color="#2C3E50">
-                    {thread.title}
-                  </Text>
+                <Text fontWeight="medium" color="#2C3E50">
+                  {session.summary}
+                </Text>
+                {/* <HStack spacing={3}>
+
                   <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
-                    {thread.date}
+                    {session.start_time}
                   </Text>
-                  {thread.unread && (
+                  {isDateToday(session.start_time) && (
                     <Badge
                       variant="solid"
                       colorScheme="red"
@@ -144,19 +128,18 @@ export default function ChatHistory() {
                       New
                     </Badge>
                   )}
-                </HStack>
+                </HStack> */}
               </Span>
               <Accordion.ItemIndicator />
             </Accordion.ItemTrigger>
 
             <Accordion.ItemContent>
               <Accordion.ItemBody p={4} bg="gray.50">
-                {console.log(thread.messages)}
-                {thread.messages ? (
+                {session.messages ? (
                   <VStack align="stretch" spacing={4}>
-                    {thread.messages.map((msg, idx) => (
+                    {session.messages.map((msg, idx) => (
                       <HStack align="start" key={idx}>
-                        {msg.sender === "bot" ? (
+                        {msg.sent_by_user === "false" ? (
                           <Avatar.Root>
                             <Avatar.Fallback name="Segun Adebayo" />
                             <Avatar.Image
@@ -177,13 +160,17 @@ export default function ChatHistory() {
                           </Avatar.Root>
                         )}
                         <Box
-                          bg={msg.sender === "bot" ? "#E6F4F1" : "gray.100"}
+                          bg={
+                            msg.sent_by_user === "false"
+                              ? "#E6F4F1"
+                              : "gray.100"
+                          }
                           p={3}
                           rounded="lg"
                           maxW="80%"
                           color="#2C3E50"
                         >
-                          <Text fontSize="sm">{msg.text}</Text>
+                          <Text fontSize="sm">{msg.content}</Text>
                           {msg.list && (
                             <Box
                               as="ul"
@@ -199,7 +186,7 @@ export default function ChatHistory() {
                             </Box>
                           )}
                           <Text fontSize="xs" color="gray.500" mt={1}>
-                            {msg.time}
+                            {msg.timestamp}
                           </Text>
                         </Box>
                       </HStack>

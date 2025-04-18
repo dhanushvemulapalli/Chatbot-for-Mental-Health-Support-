@@ -22,22 +22,53 @@ import {
 } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { decryptData, encryptData } from "../Authentication/cryptoUtils";
+import axios from "axios";
 
 export default function Dashboard() {
-  const [quote, setQuote] = useState([]);
+  const [quote, setQuote] = useState({});
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/quote/")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data["encrypted_quote"]); // Quote text
-        const decryptedData = decryptData(data["encrypted_quote"]);
-        console.log(decryptedData); // Decrypted quote text
-        setQuote(decryptedData[0]);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Check if data already exists in sessionStorage
+      const storedQuote = sessionStorage.getItem("quote");
+      const storedUser = sessionStorage.getItem("user");
+
+      if (storedQuote && storedUser) {
+        setQuote(JSON.parse(storedQuote));
+        console.log("User data (from session):", JSON.parse(storedUser));
+        setUser(JSON.parse(storedUser));
         setLoading(false);
+        return;
+      }
+
+      // Fetch encrypted quote
+      const quoteRes = await fetch("http://127.0.0.1:8000/api/quote/");
+      const quoteData = await quoteRes.json();
+      const decryptedData = decryptData(quoteData["encrypted_quote"]);
+      setQuote(decryptedData[0]);
+      sessionStorage.setItem("quote", JSON.stringify(decryptedData[0]));
+
+      // Fetch user data
+      const userRes = await axios.get("http://127.0.0.1:8000/api/user/", {
+        withCredentials: true,
       });
-  }, []);
+      console.log("User data:", userRes.data.user);
+      sessionStorage.setItem("user", JSON.stringify(userRes.data.user));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+  
 
   if (loading) {
     return (
@@ -70,7 +101,7 @@ export default function Dashboard() {
             >
               <Flex justify="space-between" align="center" mb={6}>
                 <Heading size="lg" color="#2C3E50">
-                  Welcome, John
+                  Welcome, {user.username}
                 </Heading>
               </Flex>
 
