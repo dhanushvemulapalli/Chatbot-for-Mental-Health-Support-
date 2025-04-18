@@ -35,3 +35,17 @@ export const logout = async () => {
     console.error(error);
   }
 };
+
+import axios from 'axios';
+
+export const isLoggedIn = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/check_session/', {
+      withCredentials: true, // Required for Django to send session cookie
+    });
+
+    return response.data.loggedIn === true;
+  } catch (error) {
+    return false;
+  }
+};

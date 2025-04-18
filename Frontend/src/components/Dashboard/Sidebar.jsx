@@ -45,6 +45,14 @@ function Sidebar() {
     { icon: GrResources, page: "Resources" },
   ];
 
+  const [quote, setQuote] = useState({});
+
+  useEffect(() => {
+    const user = sessionStorage.getItem("user");
+    if (user) {
+      setQuote(JSON.parse(user)); // Update state with the parsed user data from sessionStorage
+    }
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
   const ringCss = defineStyle({
     outlineWidth: "2px",
     outlineColor: "white",
@@ -182,9 +190,10 @@ function Sidebar() {
                 <Avatar.Image src="https://placehold.co/600x600?text=User_Icon" />
               </Avatar.Root>
               <VStack w={"full"} alignItems={"flex-start"} ml={3}>
-                <Text>UserName</Text>
-                <Text>Gmail address</Text>
+                <Text>{quote.username}</Text>
+                <Text>{quote.email_address}</Text>
               </VStack>
+              
               <Icon size={"lg"} ml={3} color="gray.500">
                 <IoIosLogOut />
               </Icon>

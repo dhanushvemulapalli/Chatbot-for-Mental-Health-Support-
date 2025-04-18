@@ -29,10 +29,64 @@ import { MdMail } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import PrivacyPolicy from "../Landing/PrivacyPolicy";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "../AlertProvider";
+import { encryptData } from "../Authentication/cryptoUtils";
+import axios from "axios";
 
-export default function LoginForm() {
+const defaultFormValues = {
+  emailaddress: "",
+  password: "",
+};
+
+export default function LoginForm({ checkLoginStatus }) {
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
+  const { addAlert } = useAlert(); // Assuming you have a custom hook for alerts
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ defaultValues: defaultFormValues });
+
+  const Navigate = useNavigate();
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const payload = {
+        emailaddress: data.emailaddress, // MUST match backend's expected key
+        passwordhash: encryptData(data.password), // Encrypt only password
+      };
+      console.log("Payload before sending:", payload); // Debugging line
+  
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/login/",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // ✅ Required to include session cookie
+        }
+      );
+  
+      addAlert("success", "Signin successful!");
+      console.log("Signin successful:", response.data);
+      checkLoginStatus()
+      Navigate("/dashboard"); // Redirect after successful login
+    } catch (error) {
+      const errorMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        JSON.stringify(error.response?.data) ||
+        error.message;
+  
+      addAlert("error", `Signin failed. Please try again.\n${errorMsg}`);
+      console.error("Signin failed:", errorMsg);
+    }
+  });
+  
+
   return (
     <Box
       py={20}
@@ -59,13 +113,13 @@ export default function LoginForm() {
           p={{ base: 8, md: 10 }}
           w={"md"}
         >
-          <form>
+          <form onSubmit={onSubmit}>
             <Stack gap={5}>
               <Fieldset.Root size={"lg"}>
                 <Fieldset.Content>
-                  <Field.Root>
+                  <Field.Root invalid={!!errors.emailaddress}>
                     <Field.Label fontWeight="normal" mb={1} color={"gray.700"}>
-                      Email or Username
+                      Email Address
                     </Field.Label>
                     <InputGroup
                       startElement={
@@ -76,15 +130,26 @@ export default function LoginForm() {
                     >
                       <Input
                         type="email"
-                        placeholder="Enter your email or username"
+                        placeholder="Enter your email address"
                         focusBorderColor="teal.500"
                         borderRadius={"lg"}
                         borderColor={"gray.300"}
+                        {...register("emailaddress", {
+                          required: "emailaddress is required",
+                          pattern: {
+                            value:
+                              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                            message: "Invalid email address",
+                          },
+                        })}
                       />
                     </InputGroup>
+                    <Field.ErrorText>
+                      {errors.emailaddress?.message}
+                    </Field.ErrorText>
                   </Field.Root>
 
-                  <Field.Root>
+                  <Field.Root invalid={!!errors.password}>
                     <HStack justify="space-between" mb={1} w={"full"}>
                       <Field.Label fontWeight="normal" color={"gray.700"}>
                         Password
@@ -124,13 +189,21 @@ export default function LoginForm() {
                         focusBorderColor="teal.500"
                         borderRadius={"lg"}
                         borderColor={"gray.300"}
+                        {...register("password", {
+                          required: "Password is required",
+                          minLength: {
+                            value: 6,
+                            message: "Password must be at least 6 characters",
+                          },
+                        })}
                       />
                     </InputGroup>
+                    <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
                   </Field.Root>
                 </Fieldset.Content>
               </Fieldset.Root>
 
-              <Checkbox.Root colorPalette="teal">
+              <Checkbox.Root colorPalette="teal" defaultChecked >
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
                 <Checkbox.Label fontWeight={"normal"} color="gray.600">

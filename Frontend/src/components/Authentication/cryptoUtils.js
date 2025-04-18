@@ -4,11 +4,18 @@ import CryptoJS from "crypto-js";
 const passphrase = import.meta.env.VITE_ENCRYPTION_PASSPHRASE; // ideally from .env
 const secretKey = CryptoJS.SHA256(passphrase); // 256-bit key
 
-// Encrypt any JS object (like array, object, etc.)
 export function encryptData(data) {
-  const jsonData = JSON.stringify(data);
-  const encrypted = CryptoJS.AES.encrypt(jsonData, secretKey).toString();
-  return encrypted;
+  // Ensure data is a string
+  if (typeof data !== 'string') {
+    console.error("Password must be a string, but received:", typeof data);
+    throw new Error("Password must be a string for hashing");
+  }
+
+  // Generate SHA-256 hash of the input data
+  const hashed = CryptoJS.SHA256(data).toString(CryptoJS.enc.Base64);
+
+  // Return the base64-encoded SHA-256 hash
+  return hashed;
 }
 
 // Decrypt base64 string from backend (iv + ciphertext)

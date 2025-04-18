@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
     "http://localhost:5173",
 ]
 
@@ -69,6 +70,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True
 
 ROOT_URLCONF = "mindcare_backend.urls"
 
@@ -125,8 +127,10 @@ mongoengine.connect(
 )
 
 REDIS_URL = os.getenv('REDIS_URL')
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# SESSION_CACHE_ALIAS = 'default'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 CACHES = {
     'default': {
@@ -138,6 +142,9 @@ CACHES = {
     }
 }
 
+# Print more information about sessions
+SESSION_COOKIE_NAME = 'sessionid'  # Default, but let's be explicit
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
