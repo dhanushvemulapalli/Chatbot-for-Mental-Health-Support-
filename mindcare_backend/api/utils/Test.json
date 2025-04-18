@@ -1,1 +1,21 @@
-{"answer": 'Guided breathing exercises can help manage stress and anxiety by activating your parasympathetic nervous system, which lowers your heart rate and calms your mind. You can find step-by-step guidance on deep breathing techniques at [https://www.healthline.com/health/breathing-exercises-for-anxiety](https://www.healthline.com/health/breathing-exercises-for-anxiety). Yoga is another helpful practice to reduce stress, which you can learn more about here: [https://www.yogajournal.com/poses/yoga-for-anxiety/](https://www.yogajournal.com/poses/yoga-for-anxiety/)', "resources": [{'title': 'Resource', 'link': 'https://www.healthline.com/health/breathing-exercises-for-anxiety](https://www.healthline.com/health/breathing-exercises-for-anxiety).'}, {'title': 'Resource', 'link': 'https://www.yogajournal.com/poses/yoga-for-anxiety/](https://www.yogajournal.com/poses/yoga-for-anxiety/)'}]}
+// {
+//     // "plaintext": "Hi Hello How are you"
+//     "username":"admin",
+//     "passwordhash":"+aOkfF0ijVxjJX1fEaFDQmxZu65O3PjQEfHNoMlkvDczkkE5ajeIT7r9KQixdNqP"
+//     // "emailaddress":"12@mail.com"
+// }
+// {
+//   "preferences": {
+//     "interaction_mode": "chat",
+//     "coping_preferences": ["music", "meditation"],
+//     "resource_preferences": ["articles", "youtube videos"]
+//   },
+//   "emergency_contacts": [
+//     {
+//       "name": "Alice Smith",
+//       "phone_number": "1234567890",
+//       "email_address": "alice@example.com",
+//       "relationship": "Sister"
+//     }
+//   ]
+// }
