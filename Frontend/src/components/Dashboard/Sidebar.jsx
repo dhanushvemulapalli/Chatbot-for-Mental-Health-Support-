@@ -7,6 +7,7 @@ import {
   Flex,
   HStack,
   Icon,
+  IconButton,
   Separator,
   Stack,
   Text,
@@ -21,13 +22,17 @@ import { IoIosMenu } from "react-icons/io";
 import { Tooltip } from "../ui/tooltip";
 import { IoIosLogOut } from "react-icons/io";
 import { MdHistory } from "react-icons/md";
+import axios from "axios";
+import { useAlert } from "../AlertProvider";
 
-function Sidebar() {
+const Sidebar = ({ checkLoginStatus }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentPage, setcurrentPage] = useState("Dashboard");
   const [isSemiMode, setIsSemiMode] = useState(true); // Semi-mode state
   const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Drawer open state
+  const [quote, setQuote] = useState({});
+  const { addAlert } = useAlert(); // Assuming you have a custom hook for alerts
 
   useEffect(() => {
     setcurrentPage(location.pathname.slice(1)); // Update current page on location change
@@ -45,20 +50,40 @@ function Sidebar() {
     { icon: GrResources, page: "Resources" },
   ];
 
-  const [quote, setQuote] = useState({});
-
   useEffect(() => {
     const user = sessionStorage.getItem("user");
     if (user) {
       setQuote(JSON.parse(user)); // Update state with the parsed user data from sessionStorage
     }
   }, []); // Empty dependency array ensures this runs only once when the component mounts
+
   const ringCss = defineStyle({
     outlineWidth: "2px",
     outlineColor: "white",
     outlineOffset: "2px",
     outlineStyle: "solid",
   });
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/logout/",
+        {}, // No payload needed for closing session
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("logout closed:", response); // Debugging line
+      addAlert("logout success", `${response.data.message}`);
+      checkLoginStatus(); // Call the function to check login status after logout
+    } catch (error) {
+      console.error("Error closing session:", error);
+    }
+  };
+
   return (
     <Box>
       <Stack
@@ -128,9 +153,16 @@ function Sidebar() {
             css: { "--tooltip-bg": "#18181b", color: "white", marginLeft: "3" },
           }}
         >
-          <Icon size={"lg"} ml={3} color="gray.500" mt={"auto"}>
+          <IconButton
+            size={"lg"}
+            ml={3}
+            color="gray.500"
+            mt={"auto"}
+            variant={"outline"}
+            onClick={handleLogout}
+          >
             <IoIosLogOut />
-          </Icon>
+          </IconButton>
         </Tooltip>
       </Stack>
 
@@ -193,10 +225,16 @@ function Sidebar() {
                 <Text>{quote.username}</Text>
                 <Text>{quote.email_address}</Text>
               </VStack>
-              
-              <Icon size={"lg"} ml={3} color="gray.500">
+
+              <IconButton
+                size={"lg"}
+                ml={3}
+                color="gray.500"
+                onClick={handleLogout}
+                variant={"outline"}
+              >
                 <IoIosLogOut />
-              </Icon>
+              </IconButton>
             </>
           </Drawer.Footer>
           <Drawer.CloseTrigger />
@@ -204,6 +242,6 @@ function Sidebar() {
       </Drawer.Root>
     </Box>
   );
-}
+};
 
 export default Sidebar;

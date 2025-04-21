@@ -1,15 +1,14 @@
 // layouts/PrivateLayout.jsx
 
+import { Box } from "@chakra-ui/react";
 import Sidebar from "../Dashboard/Sidebar";
 
-const PrivateLayout = ({ children }) => {
+const PrivateLayout = ({ children, checkLoginStatus }) => {
   return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar />
-      <main style={{ flex: 1, padding: '1rem' }}>
-        {children}
-      </main>
-    </div>
+    <Box style={{ display: "flex" }}>
+      <Sidebar checkLoginStatus={checkLoginStatus} />
+      <main style={{ flex: 1, padding: "1rem" }}>{children}</main>
+    </Box>
   );
 };
 

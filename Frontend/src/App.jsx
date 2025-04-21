@@ -28,6 +28,7 @@ function App() {
           withCredentials: true,
         }
       );
+      console.log("Login status response:", response);
       setLoggedIn(response.data.loggedIn === true);
     } catch (error) {
       console.log(error);
@@ -48,7 +49,7 @@ function App() {
             <Route
               path="/"
               element={
-                <PublicLayout>
+                <PublicLayout >
                   <Landing />
                 </PublicLayout>
               }
@@ -103,7 +104,7 @@ function App() {
             <Route
               path="/dashboard"
               element={
-                <PrivateLayout>
+                <PrivateLayout checkLoginStatus={checkLoginStatus}>
                   <Dashboard />
                 </PrivateLayout>
               }
@@ -111,7 +112,7 @@ function App() {
             <Route
               path="/resources"
               element={
-                <PrivateLayout>
+                <PrivateLayout checkLoginStatus={checkLoginStatus}>
                   <ResourcesSection />
                 </PrivateLayout>
               }
@@ -119,7 +120,7 @@ function App() {
             <Route
               path="/history"
               element={
-                <PrivateLayout>
+                <PrivateLayout checkLoginStatus={checkLoginStatus}>
                   <ChatHistory />
                 </PrivateLayout>
               }
@@ -127,7 +128,7 @@ function App() {
             <Route
               path="/Chats"
               element={
-                <PrivateLayout>
+                <PrivateLayout checkLoginStatus={checkLoginStatus}>
                   <Chat />
                 </PrivateLayout>
               }

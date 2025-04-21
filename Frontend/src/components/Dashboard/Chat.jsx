@@ -10,9 +10,10 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiSend, FiMessageSquare } from "react-icons/fi";
 import { useAlert } from "../AlertProvider";
+import { IoMdClose } from "react-icons/io";
 
 const messages = [];
 
@@ -23,7 +24,39 @@ export default function Chat() {
   const { addAlert } = useAlert(); // Assuming you have a custom hook for alerts
   const [quote, setQuote] = useState({});
 
-  setQuote(JSON.parse(sessionStorage.getItem("user")));
+  // Set quote state when component mounts
+  useEffect(() => {
+    const user = sessionStorage.getItem("user");
+    if (user) {
+      setQuote(JSON.parse(user));
+    }
+  }, []);
+
+  const parseMessageText = (text)=> {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+  
+    const parts = text.split(urlRegex);
+  
+    return parts.map((part, i) => {
+      if (part.match(urlRegex)) {
+        return (
+          <Link
+            key={i}
+            href={part}
+            color="teal.500"
+            isExternal
+            _hover={{ textDecoration: "underline" }}
+          >
+            {part}
+          </Link>
+        );
+      } else {
+        return <span key={i}>{part}</span>;
+      }
+    });
+  }
+  
+
   const handleSendMessage = async () => {
     if (input.trim() === "") return;
 
@@ -129,8 +162,9 @@ export default function Chat() {
       console.error("Error closing session:", error);
     }
   };
+
   return (
-    <Box bg="white" p={4} rounded="15px" shadow="md" h={"full"}>
+    <Box bg="white" p={4} rounded="15px" shadow="md" h={"95vh"} w={"100%"}>
       <Flex
         direction="column"
         h={"full"}
@@ -168,8 +202,10 @@ export default function Chat() {
             _hover={{ bg: "#b2d6b9" }}
             size="sm"
             onClick={handleCloseSessions} // Trigger the message sending and API call
+            variant={"outline"}
+            borderColor={"white"}
           >
-            <FiSend />
+            <IoMdClose  />
           </IconButton>
         </Flex>
 
@@ -180,6 +216,7 @@ export default function Chat() {
           align="stretch"
           overflowY="auto"
           bg="gray.50"
+          maxHeight="11/12" // Optional: Set a max height for the container
           p={4}
         >
           {chatMessages.map((msg, i) =>
@@ -223,7 +260,7 @@ export default function Chat() {
                   maxW="80%"
                 >
                   <Text fontSize="sm" color="#333">
-                    {msg.text}
+                    {parseMessageText(msg.text)}
                   </Text>
                   <Text fontSize="xs" color="gray.400" mt={1}>
                     {msg.time}
@@ -247,7 +284,7 @@ export default function Chat() {
           {loading && (
             <HStack align="start" key="loading">
               <Avatar.Root>
-                <Avatar.Fallback name="Segun Adebayo" />
+                <Avatar.Fallback />
                 <Avatar.Image
                   size="sm"
                   name="MC"
