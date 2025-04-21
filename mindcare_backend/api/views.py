@@ -116,23 +116,23 @@ def login_view(request):
                 response = JsonResponse({'message': 'Login successful', 'loggedIn': True})
                 
                 
-                response.set_cookie(
-                    'sessionid',
-                    request.session.session_key,
-                    max_age=3600,
-                    httponly=False,  # Allow JS access for easy checking
-                    samesite='Lax'
-                )
+                # response.set_cookie(
+                #     'sessionid',
+                #     request.session.session_key,
+                #     max_age=3600,
+                #     httponly=False,  # Allow JS access for easy checking
+                #     samesite='Lax'
+                # )
                 
-                # Also set a test cookie to see if any cookies work
-                # Set a simple cookie
-                response.set_cookie(
-                    'test_cookie',
-                    'cookie_value_' + str(time.time()),  # Use timestamp to see changes
-                    max_age=3600,
-                    httponly=False,  # Allow JS access for easy checking
-                    samesite='Lax'
-                )
+                # # Also set a test cookie to see if any cookies work
+                # # Set a simple cookie
+                # response.set_cookie(
+                #     'test_cookie',
+                #     'cookie_value_' + str(time.time()),  # Use timestamp to see changes
+                #     max_age=3600,
+                #     httponly=False,  # Allow JS access for easy checking
+                #     samesite='Lax'
+                # )
                 
                 print("Session key:", request.session.session_key)
                 print("Setting cookies:", response.cookies)

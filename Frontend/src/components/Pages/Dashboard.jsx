@@ -21,54 +21,57 @@ import {
   BsBarChart,
 } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import { decryptData, encryptData } from "../Authentication/cryptoUtils";
+import { decryptData } from "../Authentication/cryptoUtils";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { MdHistory } from "react-icons/md";
 
 export default function Dashboard() {
   const [quote, setQuote] = useState({});
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      // Check if data already exists in sessionStorage
-      const storedQuote = sessionStorage.getItem("quote");
-      const storedUser = sessionStorage.getItem("user");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Check if data already exists in sessionStorage
+        const storedQuote = sessionStorage.getItem("quote");
+        const storedUser = sessionStorage.getItem("user");
 
-      if (storedQuote && storedUser) {
-        setQuote(JSON.parse(storedQuote));
-        console.log("User data (from session):", JSON.parse(storedUser));
-        setUser(JSON.parse(storedUser));
+        if (storedQuote && storedUser) {
+          setQuote(JSON.parse(storedQuote));
+          console.log("User data (from session):", JSON.parse(storedUser));
+          setUser(JSON.parse(storedUser));
+          setLoading(false);
+          return;
+        }
+
+        // Fetch encrypted quote
+        const quoteRes = await fetch("http://127.0.0.1:8000/api/quote/");
+        const quoteData = await quoteRes.json();
+        const decryptedData = decryptData(quoteData["encrypted_quote"]);
+        setQuote(decryptedData[0]);
+        sessionStorage.setItem("quote", JSON.stringify(decryptedData[0]));
+
+        // Fetch user data
+        const userRes = await axios.get(
+          "http://127.0.0.1:8000/api/get-user-data/",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("User data:", userRes.data.user);
+        sessionStorage.setItem("user", JSON.stringify(userRes.data.user));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
         setLoading(false);
-        return;
       }
+    };
 
-      // Fetch encrypted quote
-      const quoteRes = await fetch("http://127.0.0.1:8000/api/quote/");
-      const quoteData = await quoteRes.json();
-      const decryptedData = decryptData(quoteData["encrypted_quote"]);
-      setQuote(decryptedData[0]);
-      sessionStorage.setItem("quote", JSON.stringify(decryptedData[0]));
-
-      // Fetch user data
-      const userRes = await axios.get("http://127.0.0.1:8000/api/user/", {
-        withCredentials: true,
-      });
-      console.log("User data:", userRes.data.user);
-      sessionStorage.setItem("user", JSON.stringify(userRes.data.user));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchData();
-}, []);
-
-
-  
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
@@ -164,7 +167,6 @@ useEffect(() => {
                 >
                   <Text fontSize="xl" fontWeight="bold">
                     “{quote.q}”
-                  
                   </Text>
                   <Text fontSize="md" opacity={0.8}>
                     — {quote.a}
@@ -181,7 +183,7 @@ useEffect(() => {
                   bg: "#E6F4F1",
                   title: "Chat with MindCare",
                   text: "Talk about your feelings and get support",
-                  link: "#chat",
+                  link: "/Chats",
                   btnBg: "#C9E4CA",
                   hoverBg: "#B8D5B9",
                 },
@@ -190,16 +192,16 @@ useEffect(() => {
                   bg: "#FFD8D8",
                   title: "Self-Help Exercises",
                   text: "Browse activities for mental wellness",
-                  link: "#resources",
+                  link: "/Resources",
                   btnBg: "#FFD8D8",
                   hoverBg: "#FFCACA",
                 },
                 {
-                  icon: <BsBarChart size={28} color="#2C3E50" />,
+                  icon: <MdHistory size={28} color="#2C3E50" />,
                   bg: "#E6F4F1",
-                  title: "Mood Insights",
-                  text: "Track your emotional patterns",
-                  link: "#insights",
+                  title: "Chat History",
+                  text: "Review past chats",
+                  link: "/History",
                   btnBg: "#E6F4F1",
                   hoverBg: "#D5E3E0",
                 },
@@ -235,22 +237,22 @@ useEffect(() => {
                       <Text color="#2C3E50A0">{text}</Text>
                     </Box>
                   </Flex>
-                  <Link href={link}>
-                    <Button
-                      w="full"
-                      bg={btnBg}
-                      _hover={{ bg: hoverBg }}
-                      color="#2C3E50"
-                      rounded="lg"
-                      fontWeight="medium"
-                    >
-                      {title.includes("Chat")
-                        ? "Start Chatting"
-                        : title.includes("Self")
-                        ? "Explore Resources"
-                        : "View Insights"}
-                    </Button>
-                  </Link>
+                  <Button
+                    bg={btnBg}
+                    _hover={{ bg: hoverBg }}
+                    color="#2C3E50"
+                    rounded="lg"
+                    fontWeight="medium"
+                    onClick={() => {
+                      navigate(link);
+                    }}
+                  >
+                    {title.includes("Chat")
+                      ? "Start Chatting"
+                      : title.includes("Self")
+                      ? "Explore Resources"
+                      : "View Insights"}
+                  </Button>
                 </Box>
               ))}
             </Grid>

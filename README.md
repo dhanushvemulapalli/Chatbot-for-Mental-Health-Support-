@@ -1,4 +1,3 @@
-
 # ⚡ Vite + Chakra UI Starter
 
 This is a starter project using [Vite](https://vitejs.dev/) and [Chakra UI](https://chakra-ui.com/) to build fast and beautiful React applications with ease.
@@ -35,9 +34,13 @@ yarn
 ### 3. Start Development Server
 
 ```bash
-npm run dev
-# or
-yarn dev
+npm run dev -- --port=5173 --host=127.0.0.1
+```
+
+for backend
+
+```bash
+python manage.py runserver
 ```
 
 ### 4. Build for Production
@@ -74,7 +77,3 @@ yarn preview
 ```
 
 ---
-
-
-
-

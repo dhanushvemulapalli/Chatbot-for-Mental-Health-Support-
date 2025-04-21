@@ -12,6 +12,10 @@ import {
   Badge,
   Accordion,
   Span,
+  Link,
+  Pagination,
+  ButtonGroup,
+  IconButton,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
@@ -21,11 +25,14 @@ import {
   AiOutlineRight,
   AiOutlineMessage,
 } from "react-icons/ai";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 export default function ChatHistory() {
   const [sessions, setSessions] = useState([]); // Initialize as an empty array
   const [error, setError] = useState(null);
-
+  const [page, setPage] = useState(1); // Initialize page state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredSessions, setFilteredSessions] = useState(sessions);
   const isDateToday = (timestamp) => {
     const date = new Date(timestamp);
     const today = new Date();
@@ -35,6 +42,50 @@ export default function ChatHistory() {
       date.getDate() === today.getDate()
     );
   };
+
+  const parseMessageText = (text) => {
+    const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+
+    let match;
+    while ((match = markdownLinkRegex.exec(text)) !== null) {
+      const [fullMatch, linkText, url] = match;
+
+      // Push text before the match
+      if (match.index > lastIndex) {
+        parts.push(
+          <span key={lastIndex}>{text.slice(lastIndex, match.index)}</span>
+        );
+      }
+
+      // Push the link
+      parts.push(
+        <Link
+          key={match.index}
+          href={url}
+          color="teal.500"
+          isExternal
+          _hover={{ textDecoration: "underline" }}
+        >
+          {linkText}
+        </Link>
+      );
+
+      lastIndex = match.index + fullMatch.length;
+    }
+
+    // Push remaining text after last match
+    if (lastIndex < text.length) {
+      parts.push(<span key={lastIndex}>{text.slice(lastIndex)}</span>);
+    }
+
+    return parts;
+  };
+
+  useEffect(() => {
+    setFilteredSessions(searchSessions(sessions, searchQuery));
+  }, [searchQuery, sessions]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/get-user-chat-history/", {
@@ -63,8 +114,21 @@ export default function ChatHistory() {
 
   if (error) return <p>Error: {error}</p>;
 
+  const pageSize = 5;
+  const count = sessions.length;
+  const startRange = (page - 1) * pageSize;
+  const endRange = startRange + pageSize;
+  const visibleSessions = filteredSessions.slice(startRange, endRange);
+
+  const searchSessions = (sessions, query) => {
+    if (!query) return sessions;
+
+    return sessions.filter((session) =>
+      session.summary.toLowerCase().includes(query.toLowerCase())
+    );
+  };
   return (
-    <Box px={{ base: 4, lg: 6 }} py={26} maxW="5xl" mx="auto">
+    <Box px={{ base: 4, lg: 6 }} py={26} mx="auto">
       {/* Header */}
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -92,6 +156,7 @@ export default function ChatHistory() {
             borderColor="#C9E4CA"
             focusbordercolor="#A7C5A6"
             size="sm"
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Icon
             as={AiOutlineSearch}
@@ -106,17 +171,26 @@ export default function ChatHistory() {
 
       {/* Threads */}
       <Accordion.Root defaultValue={[new Date()]} multiple>
-        {sessions.map((session) => (
+        {visibleSessions.map((session) => (
           <Accordion.Item key={session.id} value={session.start_time}>
             <Accordion.ItemTrigger>
               <Span flex="1">
-                <Text fontWeight="medium" color="#2C3E50">
+                {/* <Text fontWeight="medium" color="#2C3E50">
                   {session.summary}
-                </Text>
-                {/* <HStack spacing={3}>
-
+                </Text> */}
+                <HStack gap={3}>
+                  <Text fontWeight="medium" color="#2C3E50">
+                    {session.summary}
+                  </Text>
                   <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
-                    {session.start_time}
+                    {new Date(session.start_time).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
                   </Text>
                   {isDateToday(session.start_time) && (
                     <Badge
@@ -128,7 +202,7 @@ export default function ChatHistory() {
                       New
                     </Badge>
                   )}
-                </HStack> */}
+                </HStack>
               </Span>
               <Accordion.ItemIndicator />
             </Accordion.ItemTrigger>
@@ -139,13 +213,15 @@ export default function ChatHistory() {
                   <VStack align="stretch" spacing={4}>
                     {session.messages.map((msg, idx) => (
                       <HStack align="start" key={idx}>
-                        {msg.sent_by_user === "false" ? (
+                        {msg.sent_by_user === "true" ? (
                           <Avatar.Root>
-                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Fallback />
                             <Avatar.Image
-                              src="https://avatar.iran.liara.run/public"
-                              name="Bot"
                               size="sm"
+                              name="MC"
+                              bg="#C9E4CA"
+                              color="black"
+                              fontSize="xs"
                             />
                           </Avatar.Root>
                         ) : (
@@ -170,7 +246,9 @@ export default function ChatHistory() {
                           maxW="80%"
                           color="#2C3E50"
                         >
-                          <Text fontSize="sm">{msg.content}</Text>
+                          <Text fontSize="sm">
+                            {parseMessageText(msg.content)}
+                          </Text>
                           {msg.list && (
                             <Box
                               as="ul"
@@ -186,7 +264,14 @@ export default function ChatHistory() {
                             </Box>
                           )}
                           <Text fontSize="xs" color="gray.500" mt={1}>
-                            {msg.timestamp}
+                            {new Date(msg.timestamp).toLocaleString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </Text>
                         </Box>
                       </HStack>
@@ -210,65 +295,34 @@ export default function ChatHistory() {
 
       {/* Pagination */}
       <Flex justify="center" mt={8} gap={2}>
-        <Button size="sm" variant="ghost">
-          <AiOutlineLeft />
-        </Button>
-        <Button
-          size="sm"
-          color="#2C3E50"
-          bg="#C9E4CA"
-          _hover={{ bg: "#A7C5A6" }}
+        <Pagination.Root
+          count={count}
+          pageSize={pageSize}
+          page={page}
+          onPageChange={(e) => setPage(e.page)}
         >
-          1
-        </Button>
-        <Button size="sm" variant="ghost">
-          2
-        </Button>
-        <Button size="sm" variant="ghost">
-          3
-        </Button>
-        <Button size="sm" variant="ghost">
-          <AiOutlineRight />
-        </Button>
-      </Flex>
+          <ButtonGroup variant="ghost" size="sm">
+            <Pagination.PrevTrigger asChild>
+              <IconButton>
+                <HiChevronLeft />
+              </IconButton>
+            </Pagination.PrevTrigger>
 
-      {/* Notification Toast */}
-      <Flex
-        position="fixed"
-        bottom={4}
-        right={4}
-        bg="white"
-        boxShadow="lg"
-        rounded="lg"
-        p={4}
-        maxW="xs"
-        align="start"
-        display="none" // Change to 'flex' when showing
-      >
-        <Box bg="#C9E4CA" rounded="full" p={2} mr={3}>
-          <Icon as={AiOutlineMessage} boxSize={6} color="#2C3E50" />
-        </Box>
-        <Box>
-          <Text fontWeight="medium" color="#2C3E50">
-            New Message
-          </Text>
-          <Text fontSize="sm" color="gray.600">
-            MindCare has responded to your question about sleep improvement.
-          </Text>
-          <HStack mt={2}>
-            <Button
-              size="xs"
-              bg="#E6F4F1"
-              _hover={{ bg: "#C9E4CA" }}
-              color="#2C3E50"
-            >
-              View
-            </Button>
-            <Button size="xs" variant="ghost" color="gray.500">
-              Dismiss
-            </Button>
-          </HStack>
-        </Box>
+            <Pagination.Items
+              render={(page) => (
+                <IconButton variant={{ base: "ghost", _selected: "outline" }}>
+                  {page.value}
+                </IconButton>
+              )}
+            />
+
+            <Pagination.NextTrigger asChild>
+              <IconButton>
+                <HiChevronRight />
+              </IconButton>
+            </Pagination.NextTrigger>
+          </ButtonGroup>
+        </Pagination.Root>
       </Flex>
     </Box>
   );
