@@ -25,7 +25,9 @@ import {
   AiOutlineRight,
   AiOutlineMessage,
 } from "react-icons/ai";
+import { FaDownload } from "react-icons/fa6";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { IoMdDownload } from "react-icons/io";
 
 export default function ChatHistory() {
   const [sessions, setSessions] = useState([]); // Initialize as an empty array
@@ -112,6 +114,32 @@ export default function ChatHistory() {
       });
   }, []);
 
+  const handleDownload = (sessionId) => {
+    fetch(`http://127.0.0.1:8000/api/get-chat-pdf/${sessionId}/`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(err => {
+            throw new Error(err.error || "Failed to load PDF");
+          });
+        }
+        return res.blob(); // Get the PDF as a blob
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, "_blank"); // Open in new tab
+        // Optionally revoke the object URL after some delay to free memory
+        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  };
+  
+  
+
   if (error) return <p>Error: {error}</p>;
 
   const pageSize = 5;
@@ -172,7 +200,7 @@ export default function ChatHistory() {
       {/* Threads */}
       <Accordion.Root defaultValue={[new Date()]} multiple>
         {visibleSessions.map((session) => (
-          <Accordion.Item key={session.id} value={session.start_time}>
+          <Accordion.Item key={session.session_id} value={session.start_time}>
             <Accordion.ItemTrigger>
               <Span flex="1">
                 {/* <Text fontWeight="medium" color="#2C3E50">
@@ -204,6 +232,14 @@ export default function ChatHistory() {
                   )}
                 </HStack>
               </Span>
+              <IconButton
+                variant={"ghost"}
+                aria-label="Download"
+                onClick={() => handleDownload(session.session_id)}
+                as={Link}
+              >
+                <IoMdDownload />
+              </IconButton>
               <Accordion.ItemIndicator />
             </Accordion.ItemTrigger>
 
