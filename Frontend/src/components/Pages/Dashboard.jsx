@@ -88,6 +88,7 @@ export default function Dashboard() {
           id="dashboard"
           p={{ base: 6, md: 8, lg: 10 }}
           w={"-webkit-fill-available"}
+          h={"95vh"}
         >
           <Grid
             templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}

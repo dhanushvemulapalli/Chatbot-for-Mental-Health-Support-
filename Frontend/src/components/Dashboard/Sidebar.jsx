@@ -88,7 +88,7 @@ const Sidebar = ({ checkLoginStatus }) => {
     <Box>
       <Stack
         w={"60px"}
-        h="100vh"
+        h="100%"
         color="white"
         align="center"
         css={{

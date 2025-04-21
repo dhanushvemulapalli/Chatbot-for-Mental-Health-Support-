@@ -160,6 +160,7 @@ export default function Chat() {
       }
     } catch (error) {
       console.error("Error closing session:", error);
+      addAlert("error", error.message); // Show error alert
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -20,6 +20,11 @@ import {
   GridItem,
   Avatar,
   Icon,
+  For,
+  Pagination,
+  IconButton,
+  ButtonGroup,
+  Link,
 } from "@chakra-ui/react";
 
 import {
@@ -32,17 +37,23 @@ import {
   FiMoon,
   FiEdit,
 } from "react-icons/fi";
+import { useAlert } from "./AlertProvider";
+import { IoMdPlayCircle } from "react-icons/io";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 const ResourcesSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All Resources");
-
+  const [Resources, setResources] = useState([]); // Initialize as an empty array
+  const { addAlert, removeAlert } = useAlert();
+  const [page, setPage] = useState(1); // Initialize page state
+  const [filteredResources, setFilteredResources] = useState(Resources);
   const filters = [
     "All Resources",
-    "Stress Management",
-    "Anxiety Relief",
-    "Meditation",
-    "Sleep Better",
+    "stress relief",
+    "mental health",
+    "relaxation",
+    "mindfulness",
   ];
 
   const gradients = {
@@ -54,12 +65,86 @@ const ResourcesSection = () => {
     teal: "linear-gradient(to bottom right, #F0FDFA, #CCFBF1)",
   };
 
+  useEffect(() => {
+    setFilteredResources(searchResources(Resources, searchQuery));
+  }, [searchQuery, Resources]);
+
+  const randomGradient = () => {
+    const keys = Object.keys(gradients);
+    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+    return {
+      color: randomKey,
+      gradient: gradients[randomKey],
+    };
+  };
+
+  useEffect(() => {
+    const Alerid = addAlert("info", "Loading chat history...", null, true); // Show loading alert
+    fetch("http://127.0.0.1:8000/api/export-resources/", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Failed to load Resources");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // Assuming the data object contains a 'sessions' property that is an array
+        if (data && Array.isArray(data.resources)) {
+          setResources(data.resources); // Set sessions from the data.sessions array
+        } else {
+          addAlert("error", "No Resources found", 2000);
+        }
+      })
+      .catch((err) => {
+        addAlert("error", err.message, 2000);
+      })
+      .finally(() => {
+        removeAlert(Alerid); // Remove loading alert
+      });
+  }, []);
+
+  const getResourcesWithTag = (resources) => {
+    if (activeFilter === "All Resources") {
+      return resources;
+    } else {
+      return resources.filter((resource) =>
+        resource.tags?.includes(activeFilter)
+      );
+    }
+  };
+  const pageSize = 6;
+  const count = getResourcesWithTag(filteredResources).length;
+  const startRange = (page - 1) * pageSize;
+  const endRange = startRange + pageSize;
+  const visibleResources = getResourcesWithTag(filteredResources).slice(
+    startRange,
+    endRange
+  );
+
+  const searchResources = (Resources, query) => {
+    if (!query) return Resources;
+
+    return Resources.filter((Resource) =>
+      Resource.title.toLowerCase().includes(query.toLowerCase())
+    );
+  };
+
   return (
     <Box as="section" py="20" bg="white" px="6">
       <Container maxW="6xl">
         {/* Header */}
         <VStack textAlign="center" mb="16">
-          <Heading as="h2" size="4xl" color="gray.800" mb="4" fontWeight={"medium"}>
+          <Heading
+            as="h2"
+            size="4xl"
+            color="gray.800"
+            mb="4"
+            fontWeight={"medium"}
+          >
             Self-Help Resources
           </Heading>
           <Text color="gray.600" maxW="2xl" mx="auto">
@@ -67,7 +152,6 @@ const ResourcesSection = () => {
             your mental wellness journey.
           </Text>
         </VStack>
-
         {/* Search Bar */}
         <Box maxW="2xl" mx="auto" mb="16">
           <InputGroup
@@ -100,7 +184,6 @@ const ResourcesSection = () => {
             />
           </InputGroup>
         </Box>
-
         {/* Filters */}
         <Wrap spacing="4" justify="center" mb="12">
           {filters.map((filter) => (
@@ -117,7 +200,6 @@ const ResourcesSection = () => {
             </WrapItem>
           ))}
         </Wrap>
-
         {/* Resources Grid */}
         <Grid
           templateColumns={{
@@ -128,168 +210,135 @@ const ResourcesSection = () => {
           gap="8"
           mb="16"
         >
-          {/* Card 1 - Breathing Techniques */}
-          <ResourceCard
-            bgGradient={gradients.blue}
-            imageSrc="/api/placeholder/600/400"
-            imageAlt="Breathing exercises for anxiety relief"
-            tag="Anxiety"
-            tagColor="blue"
-            meta="5 min read"
-            title="Breathing Techniques for Anxiety Relief"
-            description="Learn simple breathing exercises that can help calm your mind and reduce anxiety in just minutes."
-            actionText="Read More"
-            actionIcon={<FiArrowRight />}
-            icon={<FiRadio />}
-          />
-
-          {/* Card 2 - Mindfulness Meditation */}
-          <ResourceCard
-            bgGradient={gradients.green}
-            imageSrc="/api/placeholder/600/400"
-            imageAlt="Mindfulness meditation guide"
-            tag="Meditation"
-            tagColor="green"
-            meta="10 min activity"
-            title="5-Minute Mindfulness Meditation"
-            description="A guided meditation practice to help you center yourself and find calm during stressful moments."
-            actionText="Start Practice"
-            actionIcon={<FiPlay />}
-            icon={<FiHeadphones />}
-          />
-
-          {/* Card 3 - Sleep Habits */}
-          <ResourceCard
-            bgGradient={gradients.purple}
-            imageSrc="/api/placeholder/600/400"
-            imageAlt="Sleep improvement strategies"
-            tag="Sleep"
-            tagColor="purple"
-            meta="7 min read"
-            title="Better Sleep Habits for Mental Wellness"
-            description="Discover practical tips to improve your sleep quality and how it impacts your mental health."
-            actionText="Read More"
-            actionIcon={<FiArrowRight />}
-            icon={<FiMoon />}
-          />
-
-          {/* Card 4 - Journaling Prompts */}
-          <ResourceCard
-            bgGradient={gradients.yellow}
-            imageSrc="/api/placeholder/600/400"
-            imageAlt="Journal prompts for self-reflection"
-            tag="Self-Reflection"
-            tagColor="yellow"
-            meta="Interactive"
-            title="Guided Journaling Prompts"
-            description="Thoughtful questions to help you process emotions and gain insights through writing."
-            actionText="Start Journaling"
-            actionIcon={<FiArrowRight />}
-            icon={<FiEdit />}
-          />
-
-          {/* Card 5 - Stress Reduction */}
-          <ResourceCard
-            bgGradient={gradients.red}
-            imageSrc="/api/placeholder/600/400"
-            imageAlt="Stress management techniques"
-            tag="Stress"
-            tagColor="red"
-            meta="8 min read"
-            title="Stress Reduction Strategies"
-            description="Practical techniques to help you manage stress in your daily life and prevent burnout."
-            actionText="Read More"
-            actionIcon={<FiArrowRight />}
-            icon={<FiBook />}
-          />
-
-          {/* Card 6 - Visualization Exercise */}
-          <ResourceCard
-            bgGradient={gradients.teal}
-            imageSrc="https://picsum.photos/200"
-            imageAlt="Guided visualization exercise"
-            tag="Relaxation"
-            tagColor="teal"
-            meta="6 min audio"
-            title="Calming Visualization Exercise"
-            description="A guided audio experience to help you relax and create a mental sanctuary for peace."
-            actionText="Listen Now"
-            actionIcon={<FiPlay />}
-            icon={<FiHeadphones />}
-          />
+          {visibleResources.map((item, index) => {
+            const { color, gradient } = randomGradient();
+            const randomval = Math.floor(Math.random() * 5) + 1;
+            return (
+              <Card.Root
+                key={index}
+                css={{ backgroundImage: gradient }}
+                rounded="2xl"
+                overflow="hidden"
+                shadow="md"
+                transition="transform 0.3s"
+                border="none"
+                _hover={{ transform: "translateY(-8px)" }}
+              >
+                <Box h="48" overflow="hidden">
+                  <Image
+                    src={`/images/img${randomval}.jpg`}
+                    alt={item.title}
+                    w="full"
+                    h="auto"
+                    borderRadius="lg"
+                    fit="cover"
+                    fallbackSrc={`https://placehold.co/500x500?text=${randomval}`}
+                  />
+                </Box>
+                <Card.Body p="6" gap="1">
+                  <Flex justify="space-between" align="center" mb="3">
+                    <Tag.Root
+                      colorPalette={color}
+                      variant="surface"
+                      rounded="full"
+                      key={index}
+                    >
+                      <Tag.Label
+                        size="sm"
+                        variant="subtle"
+                        rounded="full"
+                        px="3"
+                        py="1"
+                      >
+                        {item.tags[0] || "General"}
+                      </Tag.Label>
+                    </Tag.Root>
+                    <Text fontSize="sm" color="gray.500">
+                      {item.type === "video" ? "10 mins" : "5 mins"}
+                    </Text>
+                  </Flex>
+                  <Card.Title
+                    fontSize="xl"
+                    fontWeight="bold"
+                    color="gray.800"
+                    mb="3"
+                  >
+                    {item.title}
+                  </Card.Title>
+                  <Card.Description
+                    color="gray.600"
+                    fontSize="md"
+                    lineClamp="3"
+                  >
+                    {item.description}
+                  </Card.Description>
+                  <Flex>
+                    {item.type === "video" ? (
+                      <Link href={item.link} isExternal target="_blank">
+                        <Button
+                          variant="ghost"
+                          colorPalette="teal"
+                          _hover={{ bg: "transparent", color: "teal.700" }}
+                          p="0"
+                          fontWeight="semibold"
+                        >
+                          Read More
+                          <Icon as={FiArrowRight} ml="2" />
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Link href={item.link} isExternal target="_blank">
+                        <Button
+                          variant="ghost"
+                          colorPalette="teal"
+                          _hover={{ bg: "transparent", color: "teal.700" }}
+                          p="0"
+                          fontWeight="semibold"
+                        >
+                          Start Practice
+                          <Icon as={IoMdPlayCircle} ml="2" />
+                        </Button>
+                      </Link>
+                    )}
+                  </Flex>
+                </Card.Body>
+              </Card.Root>
+            );
+          })}
         </Grid>
+        {/* Pagination */}
+        <Flex justify="center" mt={8} gap={2}>
+          <Pagination.Root
+            count={count}
+            pageSize={pageSize}
+            page={page}
+            onPageChange={(e) => setPage(e.page)}
+          >
+            <ButtonGroup variant="ghost" size="sm">
+              <Pagination.PrevTrigger asChild>
+                <IconButton>
+                  <HiChevronLeft />
+                </IconButton>
+              </Pagination.PrevTrigger>
+
+              <Pagination.Items
+                render={(page) => (
+                  <IconButton variant={{ base: "ghost", _selected: "outline" }}>
+                    {page.value}
+                  </IconButton>
+                )}
+              />
+
+              <Pagination.NextTrigger asChild>
+                <IconButton>
+                  <HiChevronRight />
+                </IconButton>
+              </Pagination.NextTrigger>
+            </ButtonGroup>
+          </Pagination.Root>
+        </Flex>
       </Container>
     </Box>
-  );
-};
-
-// Resource Card Component using Chakra UI v3 Card
-const ResourceCard = ({
-  bgGradient,
-//   imageSrc,
-  imageAlt,
-  tag,
-  tagColor,
-  meta,
-  title,
-  description,
-  actionText,
-  actionIcon,
-}) => {
-  return (
-    <Card.Root
-      css={{ backgroundImage: bgGradient }}
-      rounded="2xl"
-      overflow="hidden"
-      shadow="md"
-      transition="transform 0.3s"
-      border={"none"}
-      _hover={{ transform: "translateY(-8px)" }}
-    >
-      <Box h="48" overflow="hidden">
-        <Image
-          src={`https://placehold.co/600x600?text=${imageAlt}`}
-          alt={imageAlt}
-          w="full"
-          h="auto"
-          borderRadius="lg"
-          objectFit={"cover"}
-          fallbackSrc="https://placehold.co/500x500"
-        />
-      </Box>
-      <Card.Body p="6" gap="1">
-        <Flex justify="space-between" align="center" mb="3">
-          <Tag.Root
-            colorPalette={tagColor}
-            variant={"surface"}
-            rounded={"full"}
-          >
-            <Tag.Label size="sm" variant="subtle" rounded="full" px="3" py="1">
-              {tag}
-            </Tag.Label>
-          </Tag.Root>
-          <Text fontSize="sm" color="gray.500">
-            {meta}
-          </Text>
-        </Flex>
-        <Card.Title fontSize="xl" fontWeight="bold" color="gray.800" mb="3">
-          {title}
-        </Card.Title>
-        <Card.Description color="gray.600" fontSize="md">{description}</Card.Description>
-        <Flex>
-          <Button
-            variant="ghost"
-            colorPalette="teal"
-            _hover={{ bg: "transparent", color: "teal.700" }}
-            p="0"
-            fontWeight="semibold"
-          >
-            {actionText}
-            <Icon size={"sm"}>{actionIcon}</Icon>
-          </Button>
-        </Flex>
-      </Card.Body>
-    </Card.Root>
   );
 };
 
