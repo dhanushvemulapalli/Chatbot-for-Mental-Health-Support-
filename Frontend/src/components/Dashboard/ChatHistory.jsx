@@ -28,6 +28,8 @@ import {
 import { FaDownload } from "react-icons/fa6";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { IoMdDownload } from "react-icons/io";
+import { RiRobot3Line } from "react-icons/ri";
+import { useAlert } from "../AlertProvider";
 
 export default function ChatHistory() {
   const [sessions, setSessions] = useState([]); // Initialize as an empty array
@@ -35,6 +37,7 @@ export default function ChatHistory() {
   const [page, setPage] = useState(1); // Initialize page state
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSessions, setFilteredSessions] = useState(sessions);
+  const { addAlert,removeAlert } = useAlert(); // Assuming you have a custom hook for alerts
   const isDateToday = (timestamp) => {
     const date = new Date(timestamp);
     const today = new Date();
@@ -90,6 +93,7 @@ export default function ChatHistory() {
   }, [searchQuery, sessions]);
 
   useEffect(() => {
+    const Alerid = addAlert("info", "Loading chat history...", null, true); // Show loading alert
     fetch("http://127.0.0.1:8000/api/get-user-chat-history/", {
       method: "GET",
       credentials: "include",
@@ -111,6 +115,12 @@ export default function ChatHistory() {
       })
       .catch((err) => {
         setError(err.message);
+      })
+      .finally(() => {
+        removeAlert(Alerid); // Remove loading alert
+        setTimeout(() => {
+          addAlert("success", "Chat history loaded successfully", 2000); // Show success alert
+        }, 1000); // Delay to show loading alert before success
       });
   }, []);
 
@@ -121,7 +131,7 @@ export default function ChatHistory() {
     })
       .then((res) => {
         if (!res.ok) {
-          return res.json().then(err => {
+          return res.json().then((err) => {
             throw new Error(err.error || "Failed to load PDF");
           });
         }
@@ -137,8 +147,6 @@ export default function ChatHistory() {
         setError(err.message);
       });
   };
-  
-  
 
   if (error) return <p>Error: {error}</p>;
 
@@ -156,7 +164,7 @@ export default function ChatHistory() {
     );
   };
   return (
-    <Box px={{ base: 4, lg: 6 }} py={26} mx="auto">
+    <Box px={{ base: 4, lg: 6 }} py={26} mx="auto" h={"95vh"} w="100%">
       {/* Header */}
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -246,10 +254,16 @@ export default function ChatHistory() {
             <Accordion.ItemContent>
               <Accordion.ItemBody p={4} bg="gray.50">
                 {session.messages ? (
-                  <VStack align="stretch" spacing={4}>
+                  <VStack align="stretch" gap={4}>
                     {session.messages.map((msg, idx) => (
-                      <HStack align="start" key={idx}>
-                        {msg.sent_by_user === "true" ? (
+                      <HStack
+                        align="start"
+                        key={idx}
+                        justifyContent={
+                          msg.sent_by_user ? "flex-end" : "flex-start"
+                        }
+                      >
+                        {!msg.sent_by_user ? (
                           <Avatar.Root>
                             <Avatar.Fallback />
                             <Avatar.Image
@@ -258,6 +272,7 @@ export default function ChatHistory() {
                               bg="#C9E4CA"
                               color="black"
                               fontSize="xs"
+                              src="https://img.freepik.com/free-vector/cartoon-style-robot-vectorart_78370-4103.jpg"
                             />
                           </Avatar.Root>
                         ) : (
@@ -268,15 +283,12 @@ export default function ChatHistory() {
                               color="#2C3E50"
                               name="JS"
                               size="sm"
+                              src="https://avatar.iran.liara.run/public"
                             />
                           </Avatar.Root>
                         )}
                         <Box
-                          bg={
-                            msg.sent_by_user === "false"
-                              ? "#E6F4F1"
-                              : "gray.100"
-                          }
+                          bg={!msg.sent_by_user ? "#E6F4F1" : "gray.100"}
                           p={3}
                           rounded="lg"
                           maxW="80%"

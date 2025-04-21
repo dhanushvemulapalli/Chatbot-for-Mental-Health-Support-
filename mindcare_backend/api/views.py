@@ -720,3 +720,26 @@ def generate_chat_pdf(request, session_id):
 
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}", status=500)
+
+@csrf_exempt
+def export_resources(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Only GET allowed'}, status=405)
+
+    try:
+        resources = Resource.objects()
+        data = []
+
+        for res in resources:
+            data.append({
+                "title": res.title,
+                "type": res.type,
+                "description": res.content,
+                "link": res.external_link,
+                "tags": res.tags,
+            })
+
+        return JsonResponse({"resources": data}, status=200, safe=False)
+
+    except Exception as e:
+        return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
