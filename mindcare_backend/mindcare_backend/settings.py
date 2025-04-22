@@ -142,6 +142,15 @@ CACHES = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # or your email provider's SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'crimsonnova917@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Use app password for Gmail
+
+
+
 # Print more information about sessions
 SESSION_COOKIE_NAME = 'sessionid'  # Default, but let's be explicit
 SESSION_SAVE_EVERY_REQUEST = True

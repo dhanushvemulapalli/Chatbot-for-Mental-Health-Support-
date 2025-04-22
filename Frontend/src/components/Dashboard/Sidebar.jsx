@@ -78,7 +78,11 @@ const Sidebar = ({ checkLoginStatus }) => {
       );
       console.log("logout closed:", response); // Debugging line
       addAlert("logout success", `${response.data.message}`);
-      checkLoginStatus(); // Call the function to check login status after logout
+      navigate("/");
+      // Small delay before updating authentication state
+      setTimeout(() => {
+        checkLoginStatus();
+      }, 100);
     } catch (error) {
       console.error("Error closing session:", error);
     }

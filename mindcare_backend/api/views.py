@@ -22,6 +22,8 @@ from django.core.cache import cache
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from django.core.mail import send_mail
+import random
 
 @api_view(['POST'])
 def decrypt_view(request):
@@ -484,6 +486,30 @@ def start_chat_session(request):
                 "It might be best to talk to a mental health professional or doctor as soon as possible. "
                 "You're not alone — help is available, and you deserve support."
             )
+            # Collect emergency contact emails
+            emergency_emails = [contact.email_address for contact in user.emergency_contacts]
+
+            # Now, send the email to the emergency contacts as well as any other necessary recipients
+            send_mail(
+                subject='A Friend May Need Your Support ❤️',
+                message=f"""
+Hi,
+    We're reaching out because your friend {user.username} ({user.email_address}) recently had a conversation with our mental health assistant at MindCare™.
+
+    Based on the interaction, there were indications of serious emotional distress, such as possible thoughts of self-harm or suicidal ideation. While we respect user privacy and cannot share full details, we believe it’s important that trusted friends like you check in.
+
+    If you feel comfortable, a simple message or call letting them know you care can make a huge difference. You don't need to have all the answers — just being present matters.
+
+    If the situation feels urgent or unsafe, please consider contacting a local crisis line or emergency services.
+
+    Thank you for being a caring friend.  
+    — MindCare Team™
+
+    *This message was generated automatically based on our AI model detecting signs of emotional crisis. If you believe this was sent in error, please disregard or reach out to us.*""",
+                from_email=None,  # Uses DEFAULT_FROM_EMAIL from settings.py
+                recipient_list=[user.email_address] + emergency_emails,
+                fail_silently=False,
+            )
             session.messages.append(Message(content=crisis_response, sent_by_user=False))
             session.save()
 
@@ -743,3 +769,145 @@ def export_resources(request):
 
     except Exception as e:
         return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
+
+
+@csrf_exempt
+def send_test_email(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            to_email = data.get('to_email')
+
+            if not to_email:
+                return JsonResponse({'error': 'Email is required'}, status=400)
+
+            send_mail(
+                subject='Test Email from Django API',
+                message='Hello! This is a test email sent from a Django API endpoint.',
+                from_email=None,  # Uses DEFAULT_FROM_EMAIL from settings.py
+                recipient_list=[to_email],
+                fail_silently=False,
+            )
+            return JsonResponse({'message': 'Email sent successfully'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def check_user_preferences_and_contacts(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Only GET method allowed'}, status=405)
+
+    # Retrieve user data from the session
+    user_session = request.session.get('user')
+
+    if not user_session:
+        return JsonResponse({'error': 'User not logged in'}, status=401)
+
+    try:
+        # Fetch user using email from session
+        user = User.objects.get(email_address=user_session['emailaddress'])
+
+        # Check if the user has preferences and emergency contacts
+        has_preferences = user.preferences is not None and bool(user.preferences.to_mongo().to_dict())
+        has_emergency_contacts = bool(user.emergency_contacts)
+
+        # Return the results as a JSON response
+        return JsonResponse({
+            'has_preferences': has_preferences,
+            'has_emergency_contacts': has_emergency_contacts
+        })
+
+    except DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+def generate_otp():
+    return str(random.randint(1000, 9999))
+
+OTP_EXPIRY_SECONDS = 300  # 5 minutes
+OTP_VERIFIED_EXPIRY = 600  # 10 mins
+
+@csrf_exempt
+def send_otp(request):
+    data = json.loads(request.body)
+    email = data.get("email")
+
+    try:
+        user = User.objects.get(email_address=email)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User with this email does not exist."}, status=404)
+
+    otp_code = generate_otp()
+    cache.set(f"otp:{email}", otp_code, timeout=OTP_EXPIRY_SECONDS)
+
+    send_mail(
+        'Your OTP Code',
+        f'Your OTP code is {otp_code}',
+        'noreply@mindcare.com',
+        [email],
+        fail_silently=False,
+    )
+    return JsonResponse({"message": "OTP sent successfully."})
+
+
+@csrf_exempt
+def resend_otp(request):
+    data = json.loads(request.body)
+    email = data.get("email")
+
+    try:
+        user = User.objects.get(email_address=email)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User with this email does not exist."}, status=404)
+
+    otp_code = generate_otp()
+    cache.set(f"otp:{email}", otp_code, timeout=OTP_EXPIRY_SECONDS)
+
+    send_mail(
+        'Your New OTP Code',
+        f'Your OTP code is {otp_code}',
+        'noreply@mindcare.com',
+        [email],
+        fail_silently=False,
+    )
+    return JsonResponse({"message": "New OTP sent successfully."})
+
+
+@csrf_exempt
+def verify_otp(request):
+    data = json.loads(request.body)
+    email = data.get("email")
+    otp = data.get("otp")
+
+    cached_otp = cache.get(f"otp:{email}")
+    if cached_otp != otp:
+        return JsonResponse({"error": "Invalid or expired OTP."}, status=400)
+
+    cache.set(f"otp_verified:{email}", True, timeout=OTP_VERIFIED_EXPIRY)
+    cache.delete(f"otp:{email}")  # Optional: remove OTP after use
+
+    return JsonResponse({"message": "OTP verified successfully."})
+
+
+@csrf_exempt
+def set_new_password(request):
+    data = json.loads(request.body)
+    email = data.get("email")
+    new_password = data.get("new_password")
+
+    verified = cache.get(f"otp_verified:{email}")
+    if not verified:
+        return JsonResponse({"error": "OTP not verified or session expired."}, status=403)
+
+    try:
+        user = User.objects.get(email_address=email)
+        user.password = new_password  # Already hashed by frontend
+        user.save()
+        cache.delete(f"otp_verified:{email}")
+        return JsonResponse({"message": "Password updated successfully."})
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+

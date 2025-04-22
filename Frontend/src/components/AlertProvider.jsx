@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
-import { Alert, Box, VStack, Spinner } from '@chakra-ui/react';
+import React, { createContext, useContext, useState } from "react";
+import { Alert, Box, VStack, Spinner } from "@chakra-ui/react";
 
 const AlertContext = createContext(null);
 
@@ -7,8 +7,8 @@ export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]);
 
   const addAlert = (
-    type = 'info',
-    message = '',
+    type = "info",
+    message = "",
     time = 2000,
     spinner = false
   ) => {
@@ -41,13 +41,24 @@ export const AlertProvider = ({ children }) => {
 
 const AlertStack = ({ alerts }) => {
   return (
-    <Box position="fixed" top="20px" left="50%" transform="translateX(-50%)" zIndex="1000">
+    <Box
+      position="fixed"
+      top="20px"
+      left="50%"
+      transform="translateX(-50%)"
+      zIndex="1000"
+    >
       <VStack gap={3} width="400px">
         {alerts.map((alert) => (
           <Alert.Root key={alert.id} status={alert.type}>
-            <Alert.Indicator>
-              {alert.spinner ? <Spinner size="sm" /> : null}
-            </Alert.Indicator>
+            {alert.spinner ? (
+              <Alert.Indicator>
+                <Spinner size="sm" />
+              </Alert.Indicator>
+            ) : (
+              <Alert.Indicator />
+            )}
+
             <Alert.Content>
               <Alert.Title>{alert.message}</Alert.Title>
             </Alert.Content>
