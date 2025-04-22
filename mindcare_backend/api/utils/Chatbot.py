@@ -11,10 +11,28 @@ load_dotenv()
 
 # Format documents manually
 def format_document(doc):
+    """
+    Format a document into a string with title, link, and content.
+
+    Args:
+        doc (Document): Document to format
+
+    Returns:
+        str: Formatted string
+    """
     return f"Title: {doc.metadata.get('title', 'No title')}\nLink: {doc.metadata.get('link', 'No link')}\nContent: {doc.page_content}"
 
 def parse_response_to_json(response_text: str):
     # Basic extraction: find links and surrounding context
+    """
+    Parse a response from the chatbot into a JSON object with extracted resources.
+
+    Args:
+        response_text (str): Text from the chatbot response
+
+    Returns:
+        dict: JSON object with answer and resources
+    """
     links = re.findall(r'(https?://[^\s]+)', response_text)
     resources = []
 
@@ -38,6 +56,16 @@ def parse_response_to_json(response_text: str):
     }
 
 def chatbot(query,history=None):
+    """
+    Process a query and return a structured JSON object with an answer and suggested resources, based on sentiment analysis and retrieval from the Pinecone VectorStore.
+
+    Args:
+        query (str): User query to process
+        history (list[HumanMessage], optional): Previous messages to include in the prompt. Defaults to None.
+
+    Returns:
+        dict: JSON object with answer and resources
+    """
     start_retrieval = time.time()
     
     # Step 1: Load Pinecone VectorStore
@@ -118,6 +146,19 @@ def chatbot(query,history=None):
 
 def crisis_check(query):
     # Initialize your LLM (Google Generative AI model)
+    """
+    Check if a user's query indicates an immediate crisis (e.g., self-harm, suicidal thoughts, or emergency).
+
+    Parameters
+    ----------
+    query : str
+        User query to check
+
+    Returns
+    -------
+    bool
+        True if the query indicates a crisis, False otherwise
+    """
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.0-flash-thinking-exp-01-21",
         temperature=0.2
@@ -164,6 +205,19 @@ def crisis_check(query):
 
 def summarize_msg(conversation):
     # Initialize your LLM (Google Generative AI model)
+    """
+    Summarize a conversation history into a 10-20 word summary of the user's emotions and key topics.
+    
+    Parameters
+    ----------
+    conversation : str
+        The conversation history to summarize.
+    
+    Returns
+    -------
+    str
+        A 10-20 word summary of the user's emotions and key topics.
+    """
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.0-flash-thinking-exp-01-21",
         temperature=0.2

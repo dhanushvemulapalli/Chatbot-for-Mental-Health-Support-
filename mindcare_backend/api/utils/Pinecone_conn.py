@@ -56,6 +56,16 @@ def get_Pinecone_vectorstore(index_name: str = "mindcare-resource2") -> Pinecone
 
 
 def clean_metadata(meta):
+    """
+    Clean the metadata dictionary by removing any key-value pairs where the value is None.
+
+    Args:
+        meta (dict): The input metadata dictionary to be cleaned.
+
+    Returns:
+        dict: A new dictionary with key-value pairs where values are not None.
+    """
+
     return {k: v for k, v in meta.items() if v is not None}
 
 
