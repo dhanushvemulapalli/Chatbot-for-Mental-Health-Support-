@@ -14,42 +14,122 @@ import PrivateLayout from "./components/layouts/PrivateLayout";
 import ForgotPassword from "./components/Pages/ForgotPassword";
 import Chat from "./components/Dashboard/Chat";
 import axios from "axios"; // Import axios
+import AnonymousLayout from "./components/layouts/AnonymousLayout";
 
 function App() {
   const { setTheme } = useTheme();
-  const [loggedIn, setLoggedIn] = useState(false); // Add state to hold login status
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [anonymous, setAnonymous] = useState(false);
+  const [Preferences, setPreferences] = useState(false); // Add state to hold user preferences
+  const [name, setName] = useState(""); // Add state to hold user name
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const checkLoginStatus = async () => {
-    console.log("Attempting to check login status...");
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/check-session/",
+        "http://127.0.0.1:8000/api/check-user-type/",
         {
           withCredentials: true,
         }
       );
-      console.log("Login status response:", response);
-      setLoggedIn(response.data.loggedIn === true);
+
+      if (response.data.type === "logged-in") {
+        setLoggedIn(true);
+        setAnonymous(false);
+        setName(response.data.user);
+      } else if (response.data.type === "anonymous") {
+        setLoggedIn(false);
+        setAnonymous(true);
+        setName("Anonymous");
+      } else {
+        setLoggedIn(false);
+        setAnonymous(false);
+      }
     } catch (error) {
       console.log(error);
       setLoggedIn(false);
+      setAnonymous(false);
+    } finally {
+      setLoading(false); // Done checking
+    }
+  };
+
+  const checkPreferncesStatus = async () => {
+    console.log("Attempting to check Preferences status...");
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/check-user-preference/",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(
+        "Preferences status response:",
+        response.data.has_emergency_contacts
+      );
+      if (
+        response.data.has_emergency_contacts === true &&
+        response.data.has_emergency_contacts !== null
+      ) {
+        setPreferences(true);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
     setTheme("light");
-
     checkLoginStatus();
   }, [setTheme]);
+
+  useEffect(() => {
+    if (loggedIn) {
+      checkPreferncesStatus();
+    }
+  }, [loggedIn]);
+
+  if (loading) return <div>Loading...</div>; // or a spinner
   return (
     <BrowserRouter>
       <Routes>
+        {/* Anonymous User Pages (similar to logged-in but limited access) */}
+        {anonymous === true && (
+          <>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route
+              path="/dashboard"
+              element={
+                <AnonymousLayout checkLoginStatus={checkLoginStatus}>
+                  <Dashboard Preferences={true} name={name} />
+                </AnonymousLayout>
+              }
+            />
+            <Route
+              path="/resources"
+              element={
+                <AnonymousLayout checkLoginStatus={checkLoginStatus}>
+                  <ResourcesSection />
+                </AnonymousLayout>
+              }
+            />
+            <Route
+              path="/Chats"
+              element={
+                <AnonymousLayout checkLoginStatus={checkLoginStatus}>
+                  <Chat />
+                </AnonymousLayout>
+              }
+            />
+          </>
+        )}
+
         {/* Public Pages */}
         {loggedIn === false && (
           <>
             <Route
               path="/"
               element={
-                <PublicLayout >
+                <PublicLayout>
                   <Landing />
                 </PublicLayout>
               }
@@ -82,7 +162,7 @@ function App() {
               path="/Companion"
               element={
                 <PublicLayout>
-                  <ChatModeDialog />
+                  <ChatModeDialog checkLoginStatus={checkLoginStatus} />
                 </PublicLayout>
               }
             />
@@ -105,7 +185,7 @@ function App() {
               path="/dashboard"
               element={
                 <PrivateLayout checkLoginStatus={checkLoginStatus}>
-                  <Dashboard />
+                  <Dashboard Preferences={Preferences} name={name} />
                 </PrivateLayout>
               }
             />

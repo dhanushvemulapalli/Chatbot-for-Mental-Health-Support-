@@ -37,7 +37,7 @@ export default function ChatHistory() {
   const [page, setPage] = useState(1); // Initialize page state
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSessions, setFilteredSessions] = useState(sessions);
-  const { addAlert,removeAlert } = useAlert(); // Assuming you have a custom hook for alerts
+  const { addAlert, removeAlert } = useAlert(); // Assuming you have a custom hook for alerts
   const isDateToday = (timestamp) => {
     const date = new Date(timestamp);
     const today = new Date();
@@ -206,140 +206,152 @@ export default function ChatHistory() {
       </Flex>
 
       {/* Threads */}
-      <Accordion.Root defaultValue={[new Date()]} multiple>
-        {visibleSessions.map((session) => (
-          <Accordion.Item key={session.session_id} value={session.start_time}>
-            <Accordion.ItemTrigger>
-              <Span flex="1">
-                {/* <Text fontWeight="medium" color="#2C3E50">
+      {visibleSessions.length > 0 ? (
+        <Accordion.Root defaultValue={[new Date()]} multiple>
+          {visibleSessions.map((session) => (
+            <Accordion.Item key={session.session_id} value={session.start_time}>
+              <Accordion.ItemTrigger>
+                <Span flex="1">
+                  {/* <Text fontWeight="medium" color="#2C3E50">
                   {session.summary}
                 </Text> */}
-                <HStack gap={3}>
-                  <Text fontWeight="medium" color="#2C3E50">
-                    {session.summary}
-                  </Text>
-                  <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
-                    {new Date(session.start_time).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </Text>
-                  {isDateToday(session.start_time) && (
-                    <Badge
-                      variant="solid"
-                      colorScheme="red"
-                      borderRadius="full"
-                      px={2}
-                    >
-                      New
-                    </Badge>
-                  )}
-                </HStack>
-              </Span>
-              <IconButton
-                variant={"ghost"}
-                aria-label="Download"
-                onClick={() => handleDownload(session.session_id)}
-                as={Link}
-              >
-                <IoMdDownload />
-              </IconButton>
-              <Accordion.ItemIndicator />
-            </Accordion.ItemTrigger>
-
-            <Accordion.ItemContent>
-              <Accordion.ItemBody p={4} bg="gray.50">
-                {session.messages ? (
-                  <VStack align="stretch" gap={4}>
-                    {session.messages.map((msg, idx) => (
-                      <HStack
-                        align="start"
-                        key={idx}
-                        justifyContent={
-                          msg.sent_by_user ? "flex-end" : "flex-start"
-                        }
+                  <HStack gap={3}>
+                    <Text fontWeight="medium" color="#2C3E50">
+                      {session.summary}
+                    </Text>
+                    <Text fontSize="xs" color="#2C3E50" opacity={0.75}>
+                      {new Date(session.start_time).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </Text>
+                    {isDateToday(session.start_time) && (
+                      <Badge
+                        variant="solid"
+                        colorScheme="red"
+                        borderRadius="full"
+                        px={2}
                       >
-                        {!msg.sent_by_user ? (
-                          <Avatar.Root>
-                            <Avatar.Fallback />
-                            <Avatar.Image
-                              size="sm"
-                              name="MC"
-                              bg="#C9E4CA"
-                              color="black"
-                              fontSize="xs"
-                              src="https://img.freepik.com/free-vector/cartoon-style-robot-vectorart_78370-4103.jpg"
-                            />
-                          </Avatar.Root>
-                        ) : (
-                          <Avatar.Root>
-                            <Avatar.Fallback name="Segun Adebayo" />
-                            <Avatar.Image
-                              bg="#FFD8D8"
-                              color="#2C3E50"
-                              name="JS"
-                              size="sm"
-                              src="https://avatar.iran.liara.run/public"
-                            />
-                          </Avatar.Root>
-                        )}
-                        <Box
-                          bg={!msg.sent_by_user ? "#E6F4F1" : "gray.100"}
-                          p={3}
-                          rounded="lg"
-                          maxW="80%"
-                          color="#2C3E50"
+                        New
+                      </Badge>
+                    )}
+                  </HStack>
+                </Span>
+                <IconButton
+                  variant={"ghost"}
+                  aria-label="Download"
+                  onClick={() => handleDownload(session.session_id)}
+                  as={Link}
+                >
+                  <IoMdDownload />
+                </IconButton>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
+
+              <Accordion.ItemContent>
+                <Accordion.ItemBody p={4} bg="gray.50">
+                  {session.messages ? (
+                    <VStack align="stretch" gap={4}>
+                      {session.messages.map((msg, idx) => (
+                        <HStack
+                          align="start"
+                          key={idx}
+                          justifyContent={
+                            msg.sent_by_user ? "flex-end" : "flex-start"
+                          }
                         >
-                          <Text fontSize="sm">
-                            {parseMessageText(msg.content)}
-                          </Text>
-                          {msg.list && (
-                            <Box
-                              as="ul"
-                              pl={4}
-                              pt={2}
-                              color="#2C3E50"
-                              fontSize="sm"
-                              listStyleType="disc"
-                            >
-                              {msg.list.map((item, i) => (
-                                <li key={i}>{item}</li>
-                              ))}
-                            </Box>
+                          {!msg.sent_by_user ? (
+                            <Avatar.Root>
+                              <Avatar.Fallback />
+                              <Avatar.Image
+                                size="sm"
+                                name="MC"
+                                bg="#C9E4CA"
+                                color="black"
+                                fontSize="xs"
+                                src="https://img.freepik.com/free-vector/cartoon-style-robot-vectorart_78370-4103.jpg"
+                              />
+                            </Avatar.Root>
+                          ) : (
+                            <Avatar.Root>
+                              <Avatar.Fallback name="Segun Adebayo" />
+                              <Avatar.Image
+                                bg="#FFD8D8"
+                                color="#2C3E50"
+                                name="JS"
+                                size="sm"
+                                src="https://avatar.iran.liara.run/public"
+                              />
+                            </Avatar.Root>
                           )}
-                          <Text fontSize="xs" color="gray.500" mt={1}>
-                            {new Date(msg.timestamp).toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                              hour: "numeric",
-                              minute: "2-digit",
-                              hour12: true,
-                            })}
-                          </Text>
-                        </Box>
-                      </HStack>
-                    ))}
-                  </VStack>
-                ) : (
-                  <Text
-                    fontSize="sm"
-                    color="gray.500"
-                    fontStyle="italic"
-                    textAlign="center"
-                  >
-                    Click to expand conversation
-                  </Text>
-                )}
-              </Accordion.ItemBody>
-            </Accordion.ItemContent>
-          </Accordion.Item>
-        ))}
-      </Accordion.Root>
+                          <Box
+                            bg={!msg.sent_by_user ? "#E6F4F1" : "gray.100"}
+                            p={3}
+                            rounded="lg"
+                            maxW="80%"
+                            color="#2C3E50"
+                          >
+                            <Text fontSize="sm">
+                              {parseMessageText(msg.content)}
+                            </Text>
+                            {msg.list && (
+                              <Box
+                                as="ul"
+                                pl={4}
+                                pt={2}
+                                color="#2C3E50"
+                                fontSize="sm"
+                                listStyleType="disc"
+                              >
+                                {msg.list.map((item, i) => (
+                                  <li key={i}>{item}</li>
+                                ))}
+                              </Box>
+                            )}
+                            <Text fontSize="xs" color="gray.500" mt={1}>
+                              {new Date(msg.timestamp).toLocaleString("en-US", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
+                            </Text>
+                          </Box>
+                        </HStack>
+                      ))}
+                    </VStack>
+                  ) : (
+                    <Text
+                      fontSize="sm"
+                      color="gray.500"
+                      fontStyle="italic"
+                      textAlign="center"
+                    >
+                      Click to expand conversation
+                    </Text>
+                  )}
+                </Accordion.ItemBody>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          ))}
+        </Accordion.Root>
+      ) : (
+        <Text
+          fontSize="md"
+          color="gray.500"
+          textAlign="center"
+          mt={10}
+          fontStyle="italic"
+        >
+          No chat history found.
+        </Text>
+      )}
 
       {/* Pagination */}
       <Flex justify="center" mt={8} gap={2}>

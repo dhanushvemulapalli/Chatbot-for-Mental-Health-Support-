@@ -17,9 +17,11 @@ import { CiUser } from "react-icons/ci";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAlert } from "./AlertProvider";
 
-const ChatModeDialog = () => {
+const ChatModeDialog = ({checkLoginStatus}) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const {addAlert} = useAlert();
   const AnonymusAccess = [
     "No account needed",
     "Conversations not saved",
@@ -243,7 +245,39 @@ const ChatModeDialog = () => {
                 >
                   Cancel
                 </Button>
-                <Button colorScheme="teal">Continue</Button>
+                <Button
+                  colorScheme="teal"
+                  isDisabled={!selectedOption}
+                  onClick={async () => {
+                    if (selectedOption === "loggedIn") {
+                      navigate("/login");
+                    } else if (selectedOption === "anonymous") {
+                      try {
+                        const response = await fetch(
+                          "http://127.0.0.1:8000/api/anonymous-chat/",
+                          {
+                            method: "GET",
+                            credentials: "include", // Important to allow session cookie
+                          }
+                        );
+
+                        const data = await response.json();
+                        addAlert("success", "Anonymous session started successfully.");
+                        await checkLoginStatus();
+                        console.log("Anonymous session started:", data);
+                        setOpen(false);
+                        navigate("/Chats");
+                      } catch (error) {
+                        console.error(
+                          "Failed to start anonymous session:",
+                          error
+                        );
+                      }
+                    }
+                  }}
+                >
+                  Continue
+                </Button>
               </HStack>
             </Dialog.Body>
           </Dialog.Content>

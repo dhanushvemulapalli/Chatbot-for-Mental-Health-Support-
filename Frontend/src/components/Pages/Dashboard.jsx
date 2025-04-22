@@ -25,13 +25,14 @@ import { decryptData } from "../Authentication/cryptoUtils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { MdHistory } from "react-icons/md";
+import PreferencesAndContactDialog from "../Dashboard/PreferencesAndContactDialog";
 
-export default function Dashboard() {
+export default function Dashboard({ Preferences, name }) {
   const [quote, setQuote] = useState({});
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,6 +81,7 @@ export default function Dashboard() {
       </Center>
     );
   }
+  console.log(Preferences);
   return (
     <>
       <Flex>
@@ -94,6 +96,14 @@ export default function Dashboard() {
             templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
             gap={{ base: 6, lg: 8 }}
           >
+            {Preferences ? (
+              <></>
+            ) : (
+              <PreferencesAndContactDialog
+                isOpen={isDialogOpen}
+                setIsOpen={setIsDialogOpen}
+              />
+            )}
             {/* Welcome Section */}
             <Box
               bg="white"
@@ -105,19 +115,34 @@ export default function Dashboard() {
             >
               <Flex justify="space-between" align="center" mb={6}>
                 <Heading size="lg" color="#2C3E50">
-                  Welcome, {user.username}
+                  Welcome, {name}
                 </Heading>
               </Flex>
 
               <Box mb={6}>
                 <Text color="#2C3E50">Your mood this week:</Text>
-                <Flex mt={1} gap={1} fontSize="2xl">
-                  <Text>😊</Text>
-                  <Text>😌</Text>
-                  <Text>😐</Text>
-                  <Text>😌</Text>
-                  <Text>😊</Text>
-                </Flex>
+                <Box position="relative" w={"fit-content"}>
+                  <Flex mt={1} gap={1} fontSize="2xl">
+                    <Text color={"gray.300"}>😊</Text>
+                    <Text>😌</Text>
+                    <Text>😐</Text>
+                    <Text>😌</Text>
+                    <Text>😊</Text>
+                  </Flex>
+                  <Box
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    right={0}
+                    bottom={0}
+                    bg="gray.300"
+                    rounded={"full"}
+                    cursor={"not-allowed"}
+                    opacity={0.5}
+                    zIndex={1}
+                    hidden={name !== "Anonymous"}
+                  />
+                </Box>
               </Box>
 
               <Text color="#2C3E50">How are you feeling today?</Text>
@@ -135,6 +160,7 @@ export default function Dashboard() {
                     bg="#E6F4F1"
                     color="#2C3E50"
                     _hover={{ bg: "#C9E4CA" }}
+                    disabled={name === "Anonymous"}
                   >
                     {label}
                   </Button>
