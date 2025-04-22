@@ -1,3 +1,4 @@
+//jahnavi
 import { Button, CloseButton, Dialog, Portal, Text } from "@chakra-ui/react";
 
 export default function PrivacyPolicy({ open, setOpen }) {
