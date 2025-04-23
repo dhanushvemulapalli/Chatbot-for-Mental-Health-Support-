@@ -75,6 +75,32 @@ const ForgotPassword = () => {
     }
   };
 
+  const handleResendOtp = async (e) => {
+    const Alerid = addAlert("info", "Sending OTP...", null, true); // Show loading alert
+    e.preventDefault();
+    const response = await fetch("http://127.0.0.1:8000/api/resend_otp/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    console.log(response.ok);
+    if (response.ok) {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("success", "New OTP Sent successfully", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+    } else {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("error", data.error || "Something went wrong.", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+    }
+  };
+
   const handleOtpSubmit = async (e) => {
     const Alerid = addAlert("info", "Sending OTP...", null, true); // Show loading alert
     e.preventDefault();
@@ -186,9 +212,12 @@ const ForgotPassword = () => {
       value: (
         <form onSubmit={handleOtpSubmit}>
           <Field.Root>
-            <Field.Label pb={"2"} fontWeight="medium" color={"gray.700"}>
-              Enter OTP
-            </Field.Label>
+            <HStack justifyContent={"space-between"} w={"full"}>
+              <Field.Label pb={"2"} fontWeight="medium" color={"gray.700"}>
+                Enter OTP
+              </Field.Label>
+              <Button variant={"plain"} onClick={handleResendOtp}>Didn't receive the OTP? </Button>
+            </HStack>
             <PinInput.Root w={"full"}>
               <PinInput.HiddenInput />
               <PinInput.Control

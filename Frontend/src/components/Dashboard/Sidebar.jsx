@@ -17,7 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaHouseChimney } from "react-icons/fa6";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
 import { GrResources } from "react-icons/gr";
 import { IoIosMenu } from "react-icons/io";
 import { Tooltip } from "../ui/tooltip";
@@ -49,6 +49,7 @@ const Sidebar = ({ checkLoginStatus }) => {
     { icon: IoChatboxEllipsesOutline, page: "Chats" },
     { icon: MdHistory, page: "History" },
     { icon: GrResources, page: "Resources" },
+    { icon: IoSettingsOutline, page: "Settings" },
   ];
 
   useEffect(() => {

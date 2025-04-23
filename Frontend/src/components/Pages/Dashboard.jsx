@@ -287,7 +287,7 @@ export default function Dashboard({ Preferences, name }) {
             </Grid>
           </Grid>
         </Box>
-        <DeleteAccount/>
+        {/* <DeleteAccount/> */}
       </Flex>
     </>
   );

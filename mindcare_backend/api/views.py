@@ -25,6 +25,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.core.mail import send_mail
 import random
+from django_ratelimit.decorators import ratelimit
 
 @api_view(['POST'])
 def decrypt_view(request):
@@ -440,6 +441,7 @@ def mock_chatbot_response(user_input):
         "recommended_resource_url": "https://www.youtube.com/results?search_query=cute+dogs+anxiety+reduction"  # Return the external URL
     }
 
+@ratelimit(key='ip', rate='3/m', block=True)
 @csrf_exempt
 def start_chat_session(request):
     if request.method != 'POST':

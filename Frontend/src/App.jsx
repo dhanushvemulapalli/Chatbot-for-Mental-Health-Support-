@@ -16,6 +16,7 @@ import ForgotPassword from "./components/Pages/ForgotPassword";
 import Chat from "./components/Dashboard/Chat";
 import axios from "axios"; // Import axios
 import AnonymousLayout from "./components/layouts/AnonymousLayout";
+import Settings from "./components/Dashboard/Settings";
 
 function App() {
   const { setTheme } = useTheme();
@@ -211,6 +212,14 @@ function App() {
               element={
                 <PrivateLayout checkLoginStatus={checkLoginStatus}>
                   <Chat />
+                </PrivateLayout>
+              }
+            />
+            <Route
+              path="/Settings"
+              element={
+                <PrivateLayout checkLoginStatus={checkLoginStatus}>
+                  <Settings />
                 </PrivateLayout>
               }
             />
