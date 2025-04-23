@@ -84,6 +84,7 @@ const Sidebar = ({ checkLoginStatus }) => {
       setTimeout(() => {
         checkLoginStatus();
       }, 100);
+      window.location.reload();
     } catch (error) {
       console.error("Error closing session:", error);
     }

@@ -1,3 +1,4 @@
+# kavya
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .utils.crypto_utils import decrypt_data, encrypt_data
@@ -18,9 +19,9 @@ from django.contrib.auth import authenticate, login
 from django.core.cache import cache
 from django.utils.timezone import now  # safer than datetime.utcnow()
 from .utils.Chatbot import chatbot, crisis_check, summarize_msg  # Assuming you have a chatbot function in utils/Chatbot.py
-from django.core.cache import cache
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
+from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.core.mail import send_mail
 import random
@@ -714,19 +715,37 @@ def generate_chat_pdf(request, session_id):
         if not session:
             return HttpResponse("Chat session not found", status=404)
 
-        # Create a HttpResponse with PDF content type
+        # Create the HTTP response with PDF header
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="chat_session_{session_id}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="MindCare_Chat_Session_{session_id}.pdf"'
 
-        # Set up PDF
+        # PDF setup
         doc = SimpleDocTemplate(response, pagesize=A4)
         styles = getSampleStyleSheet()
         elements = []
 
-        # Add title with the correct attribute (start_time)
-        elements.append(Paragraph(f"Chat Session: {session.start_time}", styles['Title']))
+        # Calculate chat duration
+        start = session.start_time
+        end = session.end_time or datetime.utcnow()
+        duration = str(end - start).split(".")[0]  # Format to HH:MM:SS
+
+        # Header
+        elements.append(Paragraph("MindCare Chatbot™ v1.0", styles['Title']))
+        elements.append(Spacer(1, 12))
+        elements.append(Paragraph("Session Summary", styles['Heading2']))
         elements.append(Spacer(1, 12))
 
+        # Session Info
+        elements.append(Paragraph(f"● Date: {start.strftime('%d/%m/%Y')}", styles['Normal']))
+        elements.append(Paragraph(f"● User ID: {str(session.user.id) if session.user else 'Anonymous'}", styles['Normal']))
+        elements.append(Paragraph(f"● Chat Duration: {duration}", styles['Normal']))
+        elements.append(Spacer(1, 12))
+
+        # Suggested Coping Strategies (Hardcoded for now; you can make this dynamic)
+        coping_strategies = [
+            "Deep breathing exercises",
+            "Journaling for self-reflection"
+        ]
         # Add chat messages
         for msg in session.messages:
             role = "User" if msg.sent_by_user else "Bot"
@@ -740,13 +759,29 @@ def generate_chat_pdf(request, session_id):
             elements.append(Paragraph("<b>Summary:</b>", styles['Heading3']))
             elements.append(Paragraph(session.session_summary, styles['Normal']))
 
+        # Recommended Resources
+        elements.append(Paragraph("● Recommended Resources:", styles['Normal']))
+        if session.recommended_resources:
+            for resource in session.recommended_resources:
+                elements.append(Paragraph(f"○ {resource.title}", styles['Normal']))  # Assumes Resource has `title`
+        else:
+            elements.append(Paragraph("○ No resources were recommended during this session.", styles['Normal']))
+        elements.append(Spacer(1, 12))
+
+        # Emergency Contact Suggestions (Optional)
+        if "emergency" in session.session_summary.lower():  # Or any trigger condition
+            elements.append(Paragraph("● Emergency Contact Suggestions:", styles['Normal']))
+            elements.append(Paragraph("○ Helpline: 123-456-7890", styles['Normal']))  # Make dynamic based on location
+
+        elements.append(Spacer(1, 24))
+        elements.append(Paragraph("Thank you for using MindCare Chatbot™. Take care!", styles['Italic']))
+        
         # Build PDF
         doc.build(elements)
         return response
 
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}", status=500)
-
 @csrf_exempt
 def export_resources(request):
     if request.method != 'GET':
@@ -911,3 +946,39 @@ def set_new_password(request):
     except User.DoesNotExist:
         return JsonResponse({"error": "User not found."}, status=404)
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth import logout
+import traceback
+from .models import User  # ensure correct import
+
+@csrf_exempt
+def delete_logged_in_user(request):
+    try:
+        print("Session ID:", request.session.session_key)
+        print("Session contents:", dict(request.session))
+
+        user_data = request.session.get('user')
+        if not user_data:
+            return JsonResponse({'error': 'No logged-in user found in session.'}, status=404)
+
+        email = user_data.get('emailaddress')
+        if not email:
+            return JsonResponse({'error': 'Email missing in session.'}, status=400)
+
+        # Find user by email (since you don't store user_id)
+        user = User.objects(email_address=email).first()
+        if not user:
+            return JsonResponse({'error': 'User not found in database.'}, status=404)
+
+        user.delete()
+
+        # Clear session and logout
+        request.session.flush()
+        logout(request)
+
+        return JsonResponse({'success': 'User account deleted and session cleared.'})
+
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)

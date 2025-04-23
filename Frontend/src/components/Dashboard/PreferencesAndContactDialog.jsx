@@ -101,11 +101,11 @@ const PreferencesAndContactDialog = ({ isOpen, setIsOpen }) => {
       motionPreset="slide-in-bottom"
       scrollBehavior="inside"
     >
-      <Dialog.Trigger asChild>
+      {/* <Dialog.Trigger asChild>
         <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
           Open Dialog
         </Button>
-      </Dialog.Trigger>
+      </Dialog.Trigger> */}
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>

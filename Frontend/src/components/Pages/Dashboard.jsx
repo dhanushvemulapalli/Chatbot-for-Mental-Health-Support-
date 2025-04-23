@@ -27,6 +27,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { MdHistory } from "react-icons/md";
 import PreferencesAndContactDialog from "../Dashboard/PreferencesAndContactDialog";
+import DeleteAccount from "../Dashboard/DeleteAccount";
 
 export default function Dashboard({ Preferences, name }) {
   const [quote, setQuote] = useState({});
@@ -286,6 +287,7 @@ export default function Dashboard({ Preferences, name }) {
             </Grid>
           </Grid>
         </Box>
+        <DeleteAccount/>
       </Flex>
     </>
   );

@@ -132,8 +132,8 @@ export default function ChatHistory() {
     })
       .then((res) => {
         if (!res.ok) {
-          return res.json().then((err) => {
-            throw new Error(err.error || "Failed to load PDF");
+          return res.text().then((text) => {
+            throw new Error(text || "Failed to load PDF");
           });
         }
         return res.blob(); // Get the PDF as a blob
@@ -141,13 +141,13 @@ export default function ChatHistory() {
       .then((blob) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url, "_blank"); // Open in new tab
-        // Optionally revoke the object URL after some delay to free memory
         setTimeout(() => window.URL.revokeObjectURL(url), 1000);
       })
       .catch((err) => {
         setError(err.message);
       });
   };
+  
 
   if (error) return <p>Error: {error}</p>;
 

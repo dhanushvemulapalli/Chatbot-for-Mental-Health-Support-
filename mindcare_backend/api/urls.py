@@ -1,5 +1,6 @@
+# kavya
 from django.urls import path
-from .views import decrypt_view, Hello, get_quote, login_view, logout_view, check_session, check_user_type, anonymous_chat_view, signup_view, encrypt_view, store_in_redis, update_user_profile, import_resources, start_chat_session, end_chat_session, get_user_chat_sessions, generate_chat_pdf, test_cookie, get_user_data, export_resources, send_test_email, check_user_preferences_and_contacts, send_otp, resend_otp, verify_otp, set_new_password
+from .views import decrypt_view, Hello, get_quote, login_view, logout_view, check_session, check_user_type, anonymous_chat_view, signup_view, encrypt_view, store_in_redis, update_user_profile, import_resources, start_chat_session, end_chat_session, get_user_chat_sessions, generate_chat_pdf, test_cookie, get_user_data, export_resources, send_test_email, check_user_preferences_and_contacts, send_otp, resend_otp, verify_otp, set_new_password, delete_logged_in_user
 
 urlpatterns = [
     path('decrypt/', decrypt_view),
@@ -28,4 +29,5 @@ urlpatterns = [
     path('resend_otp/',resend_otp),
     path('verify-otp/',verify_otp),  # Assuming you have a user type check view
     path('set-new-password/',set_new_password),  # Assuming you have a user type check view
+    path('delete-logged-in-user/',delete_logged_in_user)
 ]

@@ -38,6 +38,7 @@ import { encryptData } from "../Authentication/cryptoUtils";
 import axios from "axios";
 import { useAlert } from "../AlertProvider";
 import { useNavigate } from "react-router-dom";
+import { PasswordInput } from "../ui/password-input";
 
 const defaultFormValues = {
   username: "",
@@ -173,9 +174,11 @@ export default function Signup() {
                         borderColor={"gray.300"}
                         {...register("password", {
                           required: "Password is required",
-                          minLength: {
-                            value: 6,
-                            message: "Password must be at least 6 characters",
+                          pattern: {
+                            value:
+                              /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/,
+                            message:
+                              "Password must be 8-16 characters, include at least 1 uppercase letter, 1 number, and 1 special character",
                           },
                         })}
                       />
@@ -193,7 +196,7 @@ export default function Signup() {
                     <InputGroup
                       startElement={<Icon as={FaLock} color="gray.400" />}
                     >
-                      <Input
+                      <PasswordInput
                         type="password"
                         placeholder="Confirm your password"
                         borderRadius={"lg"}
