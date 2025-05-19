@@ -254,7 +254,7 @@ export default function Signup() {
                 </Stack>
               </Fieldset.Content>
             </Fieldset.Root>
-            <HStack my={4} align="center" color="gray.500">
+            {/* <HStack my={4} align="center" color="gray.500">
               <Separator flex="1" />
               <Text flexShrink="0">OR</Text>
               <Separator flex="1" />
@@ -270,7 +270,7 @@ export default function Signup() {
                 <FcGoogle />
                 Google
               </Button>
-            </HStack>
+            </HStack> */}
 
             <Text textAlign="center" fontSize="sm" mt={6}>
               Already have an account?{" "}

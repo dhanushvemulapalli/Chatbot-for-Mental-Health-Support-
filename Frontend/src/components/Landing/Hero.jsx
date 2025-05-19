@@ -240,10 +240,11 @@ const Hero = () => {
                 overflow="hidden"
               >
                 <Image
-                  src="https://placehold.co/600x600?text=Friendly AI mental health chatbot illustration"
+                  src="https://t3.ftcdn.net/jpg/05/74/72/86/360_F_574728684_voyDBkCWq2cKEd3MDoNE0nQLrWYFVxFh.jpg"
                   alt="Friendly AI mental health chatbot illustration"
                   w="full"
                   h="auto"
+                  fit={"cover"}
                   borderRadius="lg"
                   fallbackSrc="https://placehold.co/500x500"
                 />

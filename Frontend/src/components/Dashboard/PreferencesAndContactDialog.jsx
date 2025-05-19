@@ -103,7 +103,7 @@ const PreferencesAndContactDialog = ({ isOpen, setIsOpen }) => {
     >
       <Dialog.Trigger asChild>
         <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
-          Open Dialog
+          Set preferences
         </Button>
       </Dialog.Trigger>
       <Portal>

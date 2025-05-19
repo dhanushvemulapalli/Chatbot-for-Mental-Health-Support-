@@ -41,7 +41,7 @@ const defaultFormValues = {
   password: "",
 };
 
-export default function LoginForm({ checkLoginStatus }) {
+export default function SignForm({ checkLoginStatus }) {
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
   const { addAlert } = useAlert(); // Assuming you have a custom hook for alerts
@@ -59,7 +59,7 @@ export default function LoginForm({ checkLoginStatus }) {
         passwordhash: encryptData(data.password), // Encrypt only password
       };
       console.log("Payload before sending:", payload); // Debugging line
-  
+
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login/",
         payload,
@@ -70,10 +70,10 @@ export default function LoginForm({ checkLoginStatus }) {
           withCredentials: true, // ✅ Required to include session cookie
         }
       );
-  
+
       addAlert("success", "Signin successful!");
       console.log("Signin successful:", response.data);
-      checkLoginStatus()
+      checkLoginStatus();
       Navigate("/dashboard"); // Redirect after successful login
     } catch (error) {
       const errorMsg =
@@ -81,12 +81,11 @@ export default function LoginForm({ checkLoginStatus }) {
         error.response?.data?.message ||
         JSON.stringify(error.response?.data) ||
         error.message;
-  
+
       addAlert("error", `Signin failed. Please try again.\n${errorMsg}`);
       console.error("Signin failed:", errorMsg);
     }
   });
-  
 
   return (
     <Box
@@ -95,14 +94,14 @@ export default function LoginForm({ checkLoginStatus }) {
       css={{
         backgroundImage: "linear-gradient(to bottom right, #ebf8ff, #f0fdf4)",
       }}
-      h={"full"}
+      h={"100vh"}
     >
       <Container maxW="md" centerContent>
         <VStack spacing={10} textAlign="center" my={6}>
           <Heading size="3xl" color="gray.800" fontWeight={"bold"}>
             Welcome Back
           </Heading>
-          <Text color="gray.600">
+          <Text color="Pink.600">
             Sign in to your MindCare account to continue your journey.
           </Text>
         </VStack>
@@ -199,15 +198,17 @@ export default function LoginForm({ checkLoginStatus }) {
                         })}
                       />
                     </InputGroup>
-                    <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+                    <Field.ErrorText>
+                      {errors.password?.message}
+                    </Field.ErrorText>
                   </Field.Root>
                 </Fieldset.Content>
               </Fieldset.Root>
 
-              <Checkbox.Root colorPalette="teal" defaultChecked >
+              <Checkbox.Root colorPalette="teal" defaultChecked>
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
-                <Checkbox.Label fontWeight={"normal"} color="gray.600">
+                <Checkbox.Label fontWeight={"normal"} color="Pink.600">
                   Remember me
                 </Checkbox.Label>
               </Checkbox.Root>
@@ -219,10 +220,10 @@ export default function LoginForm({ checkLoginStatus }) {
                 size="lg"
                 fontWeight="medium"
               >
-                Log In
+                Sign up
               </Button>
 
-              <HStack align="center" my={2}>
+              {/* <HStack align="center" my={2}>
                 <Separator flex="1" />
                 <Text flexShrink="0" color="gray.400">
                   OR
@@ -240,11 +241,11 @@ export default function LoginForm({ checkLoginStatus }) {
                   <FcGoogle />
                   Google
                 </Button>
-              </HStack>
+              </HStack> */}
             </Stack>
           </form>
 
-          <Text textAlign="center" mt={6} fontSize="sm" color="gray.600">
+          <Text textAlign="center" mt={6} fontSize="sm" color="Pink.600">
             Don&apos;t have an account?{" "}
             <Link
               color="teal.600"
@@ -258,11 +259,11 @@ export default function LoginForm({ checkLoginStatus }) {
         </Box>
 
         <VStack mt={6} spacing={2} textAlign="center">
-          <HStack justify="center" fontSize="sm" color="gray.500">
+          <HStack justify="center" fontSize="sm" color="Pink.500">
             <Icon as={IoShieldCheckmarkOutline} w={4} h={4} />
             <Text>Secure login with 256-bit encryption</Text>
           </HStack>
-          <Text fontSize="xs" color="gray.500">
+          <Text fontSize="xs" color="Pink.500">
             We take your privacy seriously. See our{" "}
             <Link
               textDecoration="underline"
