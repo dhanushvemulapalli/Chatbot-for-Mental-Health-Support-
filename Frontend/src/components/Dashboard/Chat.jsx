@@ -33,11 +33,11 @@ export default function Chat() {
     }
   }, []);
 
-  const parseMessageText = (text)=> {
+  const parseMessageText = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-  
+
     const parts = text.split(urlRegex);
-  
+
     return parts.map((part, i) => {
       if (part.match(urlRegex)) {
         return (
@@ -55,8 +55,7 @@ export default function Chat() {
         return <span key={i}>{part}</span>;
       }
     });
-  }
-  
+  };
 
   const handleSendMessage = async () => {
     if (input.trim() === "") return;
@@ -193,7 +192,7 @@ export default function Chat() {
               MindCare Assistant
             </Text>
             <Text fontSize="xs" color="#555">
-              Online • Responds instantly
+              Online 
             </Text>
           </Box>
           <IconButton
@@ -207,7 +206,7 @@ export default function Chat() {
             variant={"outline"}
             borderColor={"white"}
           >
-            <IoMdClose  />
+            <IoMdClose />
           </IconButton>
         </Flex>
 
@@ -232,6 +231,7 @@ export default function Chat() {
                     bg="#C9E4CA"
                     color="black"
                     fontSize="xs"
+                    src="https://img.freepik.com/free-vector/cartoon-style-robot-vectorart_78370-4103.jpg"
                   />
                 </Avatar.Root>
 
@@ -276,6 +276,7 @@ export default function Chat() {
                     bg="#FFD8D8"
                     color="black"
                     fontSize="xs"
+                    src="https://avatar.iran.liara.run/public"
                   />
                 </Avatar.Root>
               </HStack>

@@ -23,21 +23,32 @@ import { FaLock } from "react-icons/fa6";
 import { PasswordInput } from "../ui/password-input";
 import { IoMdCheckmark } from "react-icons/io";
 import { encryptData } from "../Authentication/cryptoUtils";
+import PrivacyPolicy from "../Landing/PrivacyPolicy";
+import { Link } from "react-router-dom";
+import { useAlert } from "../AlertProvider";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("    ");
   const [newPassword, setNewPassword] = useState("");
   const [currentStep, setCurrentStep] = useState(0); // Track the current step
+  const [open, setOpen] = useState(false);
+  const { addAlert, removeAlert } = useAlert(); // Assuming you have a custom hook for alerts
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-
+  const validatePassword = (password) => {
+    const regex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/;
+    return regex.test(password);
+  };
   const handleStepComplete = () => {
     console.log("Step", currentStep, "completed ✅");
     setCurrentStep((prev) => Math.min(prev + 1, steps.length)); // prevent going out of bounds
   };
-  
 
   const handleEmailSubmit = async (e) => {
+    const Alerid = addAlert("info", "Sending OTP...", null, true); // Show loading alert
     e.preventDefault();
     const response = await fetch("http://127.0.0.1:8000/api/send-otp/", {
       method: "POST",
@@ -50,13 +61,48 @@ const ForgotPassword = () => {
     const data = await response.json();
     console.log(response.ok);
     if (response.ok) {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("success", "OTP Sent successfully", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+
       handleStepComplete(); // Move to verify OTP step
     } else {
-      alert(data.error || "Something went wrong.");
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("error", data.error || "Something went wrong.", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+    }
+  };
+
+  const handleResendOtp = async (e) => {
+    const Alerid = addAlert("info", "Sending OTP...", null, true); // Show loading alert
+    e.preventDefault();
+    const response = await fetch("http://127.0.0.1:8000/api/resend_otp/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    console.log(response.ok);
+    if (response.ok) {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("success", "New OTP Sent successfully", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+    } else {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("error", data.error || "Something went wrong.", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
     }
   };
 
   const handleOtpSubmit = async (e) => {
+    const Alerid = addAlert("info", "Sending OTP...", null, true); // Show loading alert
     e.preventDefault();
     const response = await fetch("http://127.0.0.1:8000/api/verify-otp/", {
       method: "POST",
@@ -69,14 +115,37 @@ const ForgotPassword = () => {
 
     const data = await response.json();
     if (response.ok) {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("success", "OTP verified Successfully", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+
       setCurrentStep(2); // Move to set new password step
     } else {
-      alert(data.error || "Invalid OTP.");
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("error", data.error || "Invalid OTP.", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
     }
   };
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      setError(
+        "Password must be 8–16 characters, include at least one uppercase letter, one number, and one special character."
+      );
+      return;
+    }
+
+    setError(""); // Clear error message
+
+    const Alerid = addAlert("info", "Updating Password...", null, true); // Show loading alert
     const response = await fetch(
       "http://127.0.0.1:8000/api/set-new-password/",
       {
@@ -89,11 +158,19 @@ const ForgotPassword = () => {
     );
 
     const data = await response.json();
-    console.log(response)
+    console.log(response);
     if (response.ok) {
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("success", "Password Changed Successful", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
+
       setCurrentStep(3); // Password reset successful, show confirmation
     } else {
-      alert(data.error || "Something went wrong.");
+      removeAlert(Alerid); // Remove loading alert
+      setTimeout(() => {
+        addAlert("error", data.error || "Something went wrong.", 2000); // Show success alert
+      }, 1000); // Delay to show loading alert before success
     }
   };
 
@@ -135,9 +212,12 @@ const ForgotPassword = () => {
       value: (
         <form onSubmit={handleOtpSubmit}>
           <Field.Root>
-            <Field.Label pb={"2"} fontWeight="medium" color={"gray.700"}>
-              Enter OTP
-            </Field.Label>
+            <HStack justifyContent={"space-between"} w={"full"}>
+              <Field.Label pb={"2"} fontWeight="medium" color={"gray.700"}>
+                Enter OTP
+              </Field.Label>
+              <Button variant={"plain"} onClick={handleResendOtp}>Didn't receive the OTP? </Button>
+            </HStack>
             <PinInput.Root w={"full"}>
               <PinInput.HiddenInput />
               <PinInput.Control
@@ -162,7 +242,13 @@ const ForgotPassword = () => {
               </PinInput.Control>
             </PinInput.Root>
 
-            <Button type="submit" colorScheme="indigo" w="full" rounded={"lg"}>
+            <Button
+              type="submit"
+              colorScheme="indigo"
+              w="full"
+              rounded={"lg"}
+              mt={6}
+            >
               Verify
             </Button>
           </Field.Root>
@@ -188,8 +274,17 @@ const ForgotPassword = () => {
               <Field.Label fontWeight={"normal"}>
                 Confirm New Password
               </Field.Label>
-              <PasswordInput />
+              <PasswordInput
+                startelement={<Icon as={FaLock} color="gray.400" />}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </Field.Root>
+            {error && (
+              <Text color="red.500" fontSize="sm">
+                {error}
+              </Text>
+            )}
             <Button type="submit" colorScheme="indigo" w="full" rounded={"lg"}>
               Reset Password
             </Button>
@@ -206,7 +301,7 @@ const ForgotPassword = () => {
       css={{
         backgroundImage: "linear-gradient(to bottom right, #eef2ff, #faf5ff)",
       }}
-      h={"full"}
+      h={"100vh"}
     >
       <Container maxW="lg" centerContent>
         <Box textAlign="center" mb={10}>
@@ -247,6 +342,15 @@ const ForgotPassword = () => {
                 </Box>
               </Steps.Content>
             ))}
+            <Steps.List pt={10} pb={6}>
+              {steps.map((step, index) => (
+                <Steps.Item key={index} index={index} title={step.title}>
+                  <Steps.Indicator />
+                  <Steps.Title>{step.title}</Steps.Title>
+                  <Steps.Separator />
+                </Steps.Item>
+              ))}
+            </Steps.List>
             <Steps.CompletedContent>
               <Box textAlign="center" py={10}>
                 <Box
@@ -299,6 +403,23 @@ const ForgotPassword = () => {
             </Steps.CompletedContent>
           </Steps.Root>
         </Box>
+        <VStack mt={6} spacing={2} textAlign="center">
+          <HStack justify="center" fontSize="sm" color="gray.500">
+            <Icon as={IoShieldCheckmarkOutline} w={4} h={4} />
+            <Text>Secure login with 256-bit encryption</Text>
+          </HStack>
+          <Text fontSize="xs" color="gray.500">
+            We take your privacy seriously. See our{" "}
+            <Link
+              textDecoration="underline"
+              _hover={{ color: "gray.700" }}
+              onClick={() => setOpen(true)}
+            >
+              Privacy Policy
+            </Link>
+            <PrivacyPolicy open={open} setOpen={setOpen} />
+          </Text>
+        </VStack>
       </Container>
     </Box>
   );

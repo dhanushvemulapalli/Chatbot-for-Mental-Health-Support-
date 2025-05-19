@@ -1,3 +1,4 @@
+# dhanush
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage
@@ -6,6 +7,10 @@ from .Pinecone_conn import get_Pinecone_vectorstore
 import re
 import time
 from .Sentiment_Anal import sentiment_analysis
+from datasets import load_dataset
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
+import torch
+import random
 
 load_dotenv()
 
@@ -250,6 +255,81 @@ def summarize_msg(conversation):
     print("Conversation Summary:", response.content)
     return response.content
 
+
+def is_llm_working() -> bool:
+    try:
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash-thinking-exp-01-21",
+            temperature=0
+        )
+        test_message = HumanMessage(content="Ping?")
+        response = llm([test_message])
+        return response.content is not None and len(response.content.strip()) > 0
+    except Exception as e:
+        print(f"LLM check failed: {e}")
+        return False
+
+
+# # Secondary LLM
+
+# # Load everything only once (global setup)
+# intent_labels = ["feeling_anxious", "feeling_sad", "seeking_help", "seeking_fun", "crisis", "general_chat"]
+# label2id = {label: id for id, label in enumerate(intent_labels)}
+# id2label = {id: label for label, id in label2id.items()}
+
+# # Load the trained intent classifier and tokenizer
+# loaded_tokenizer = AutoTokenizer.from_pretrained("./trained_intent_classifier")
+# loaded_classifier_model = AutoModelForSequenceClassification.from_pretrained("./trained_intent_classifier")
+# loaded_classifier_model.eval()
+
+# # The main function to call
+# def get_chatbot_response(user_input: str) -> str:
+#     inputs = loaded_tokenizer(user_input, return_tensors="pt", truncation=True, padding=True)
+#     with torch.no_grad():
+#         outputs = loaded_classifier_model(**inputs)
+#     predicted_class = torch.argmax(outputs.logits, dim=-1).item()
+#     intent = id2label[predicted_class]
+
+#     if intent == "crisis":
+#         return """
+# It sounds like you are going through an extremely difficult time and are in distress.
+# Please know that you are not alone and there is help available.
+
+# **If you are in immediate danger, please call your local emergency number immediately (e.g., 112, 911).**
+
+# You can also contact the following crisis hotlines in Amaravati, Andhra Pradesh, India:
+
+# * **[Insert Local Suicide Prevention Helpline Number for Amaravati]**
+# * **[Insert Link to Mental Health Services in Andhra Pradesh]**
+
+# Please reach out to them right now. Talking to someone can make a difference.
+# Your life is important, and help is available.
+# """
+#     elif intent == "feeling_anxious":
+#         return random.choice([
+#             "It sounds like you're feeling anxious. Remember to breathe deeply.",
+#             "What thoughts are making you feel anxious right now?"
+#         ])
+#     elif intent == "feeling_sad":
+#         return random.choice([
+#             "I hear you're feeling down. It's okay to feel your emotions.",
+#             "Is there anything specific that's making you feel sad?"
+#         ])
+#     elif intent == "seeking_help":
+#         return random.choice([
+#             "It's a sign of strength to seek help. What kind of support are you looking for?",
+#             "There are many resources available. How can I guide you?"
+#         ])
+#     elif intent == "seeking_fun":
+#         return random.choice([
+#             "Why don't scientists trust atoms? Because they make up everything!",
+#             "What do you call a lazy kangaroo? Pouch potato!"
+#         ])
+#     else:
+#         return "I'm here to listen. How can I assist you today?"
+
+# Example use
+# print(get_chatbot_response("I feel really anxious and can't sleep at night."))
 
 
 if __name__ == "__main__":

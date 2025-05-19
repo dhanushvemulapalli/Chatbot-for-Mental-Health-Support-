@@ -27,6 +27,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { MdHistory } from "react-icons/md";
 import PreferencesAndContactDialog from "../Dashboard/PreferencesAndContactDialog";
+import DeleteAccount from "../Dashboard/DeleteAccount";
 
 export default function Dashboard({ Preferences, name }) {
   const [quote, setQuote] = useState({});
@@ -97,14 +98,6 @@ export default function Dashboard({ Preferences, name }) {
             templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
             gap={{ base: 6, lg: 8 }}
           >
-            {Preferences ? (
-              <></>
-            ) : (
-              <PreferencesAndContactDialog
-                isOpen={isDialogOpen}
-                setIsOpen={setIsDialogOpen}
-              />
-            )}
             {/* Welcome Section */}
             <Box
               bg="white"
@@ -285,7 +278,18 @@ export default function Dashboard({ Preferences, name }) {
               ))}
             </Grid>
           </Grid>
+          {Preferences ? (
+            <></>
+          ) : (
+            <Box mt={6} textAlign="center">
+              <PreferencesAndContactDialog
+                isOpen={isDialogOpen}
+                setIsOpen={setIsDialogOpen}
+              />
+            </Box>
+          )}
         </Box>
+        {/* <DeleteAccount/> */}
       </Flex>
     </>
   );
