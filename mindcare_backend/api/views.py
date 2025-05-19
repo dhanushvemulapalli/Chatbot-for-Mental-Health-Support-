@@ -186,6 +186,7 @@ def get_user_data(request):
 @csrf_exempt
 def test_cookie(request):
     # Check if the test cookie exists
+    
     test_cookie = request.COOKIES.get('test_cookie')
     
     # Set a test cookie in the response
