@@ -1,4 +1,3 @@
-# kavya
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .utils.crypto_utils import decrypt_data, encrypt_data
